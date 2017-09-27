@@ -113,15 +113,16 @@ namespace GayChat.Controllers
             ViewData["ReturnUrl"] = returnUrl;
             if (ModelState.IsValid)
             {
-                if (model.Image.Length > 0)
-                {
-                    string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "UserImages", model.Image.FileName);
-
-                    using (var fileStream = new FileStream(path, FileMode.Create))
+                if (model.Image != null)
+                    if (model.Image.Length > 0)
                     {
-                        model.Image.CopyTo(fileStream);
+                        string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "UserImages", model.Image.FileName);
+
+                        using (var fileStream = new FileStream(path, FileMode.Create))
+                        {
+                            model.Image.CopyTo(fileStream);
+                        }
                     }
-                }
 
                 var user = new ApplicationUser { UserName = model.Email, Email = model.Email, Nickname = model.Username };
                 var result = await _userManager.CreateAsync(user, model.Password);
