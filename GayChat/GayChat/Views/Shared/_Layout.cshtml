@@ -1,4 +1,10 @@
 ﻿@inject Microsoft.ApplicationInsights.AspNetCore.JavaScriptSnippet JavaScriptSnippet
+@using Microsoft.AspNetCore.Identity
+@using GayChat.Models
+
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -9,6 +15,8 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="~/css/materialize.css" rel="stylesheet" />
 
+    <script src="~/lib/jquery/dist/jquery.js"></script> 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
 
     <environment names="Development">
         <link rel="stylesheet" href="~/css/site.css" />
@@ -27,24 +35,73 @@
 
     <nav>
         <div class="nav-wrapper">
+            <a data-activates="slide-out" class="button-collapse brand-left center" style="display: block; cursor: pointer"><i class="material-icons">menu</i></a>
             <a href="/Home/Index" class="brand-logo center" style="letter-spacing: 2px">Gay Chat</a>
-            <ul class="left hide-on-med-and-down" style="margin-left: 150px">
-                <li><a href="/Account/Register">Register</a></li>
-                <li><a href="/Account/Login">Login</a></li>
+
+            <ul class="left hide-on-med-and-down" style="margin-left: 100px">
+                <li><a href="/Home/About">My Account</a></li>
                 <li><a href="/Home/About">About</a></li>
-                <li class="active"><a href="#">Penis</a></li>
-                <li class="active"><a href="#">Vagina</a></li>
             </ul>
+
+
+
+            @if (SignInManager.IsSignedIn(User))
+            {
+                <form asp-area="" asp-controller="Account" asp-action="Logout" method="post" id="logoutForm">
+                    <ul class="right hide-on-med-and-down" style="margin-right: 150px;">
+
+                        <li><a>@((await UserManager.GetUserAsync(User)).Nickname)</a></li>
+                        <li><a href="#" onclick="LogOut()">Log off</a></li>
+
+                    </ul>
+                </form>
+            }
+            else
+            {
+                <ul class="right hide-on-med-and-down" style="margin-right: 150px;">
+
+                    <li><a href="/Account/Login">Login</a></li>
+                    <li><a href="/Account/Register">Register</a></li>
+
+                </ul>
+            }
+
+
+
         </div>
     </nav>
 
-    @RenderBody()
+    <ul id="slide-out" class="side-nav"></ul>
 
 
+    <div style="margin: 50px">
 
+        @RenderBody()
 
-    <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-    <script src="~/js/materialize.js"></script>
+    </div>
+    
+    <script>
+
+        function LogOut() {
+            $("#logoutForm").submit();
+        }
+
+        (function ($) {
+            $(function () {
+
+                $('.button-collapse').sideNav({
+                    menuWidth: 300, // Default is 300
+                    edge: 'left', // Choose the horizontal origin
+                    closeOnClick: true, // Closes side-nav on <a> clicks, useful for Angular/Meteor
+                    draggable: true, // Choose whether you can drag to open on touch screens,
+                }
+                );
+
+            });
+        })(jQuery);
+
+    </script>
+
 
     <environment names="Development">
         <script src="~/lib/jquery/dist/jquery.js"></script>
@@ -59,6 +116,8 @@
         </script>
         <script src="~/js/site.min.js" asp-append-version="true"></script>
     </environment>
+
+
 
     @RenderSection("Scripts", required: false)
 </body>
