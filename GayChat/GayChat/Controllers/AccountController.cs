@@ -12,6 +12,7 @@ using Microsoft.Extensions.Options;
 using GayChat.Models;
 using GayChat.Models.AccountViewModels;
 using GayChat.Services;
+using System.IO;
 
 namespace GayChat.Controllers
 {
@@ -112,6 +113,16 @@ namespace GayChat.Controllers
             ViewData["ReturnUrl"] = returnUrl;
             if (ModelState.IsValid)
             {
+                if (model.Image.Length > 0)
+                {
+                    string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "UserImages", model.Image.FileName);
+
+                    using (var fileStream = new FileStream(path, FileMode.Create))
+                    {
+                        model.Image.CopyTo(fileStream);
+                    }
+                }
+
                 var user = new ApplicationUser { UserName = model.Email, Email = model.Email, Nickname = model.Username };
                 var result = await _userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
