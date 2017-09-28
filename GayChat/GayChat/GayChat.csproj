@@ -1,10 +1,18 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp1.1</TargetFramework>
     <PackageTargetFallback>$(PackageTargetFallback);portable-net45+win8+wp8+wpa81;</PackageTargetFallback>
     <UserSecretsId>aspnet-GayChat-BBC313CD-1275-4754-A202-2E98FE80E390</UserSecretsId>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Views\Home\StyleCSS1.css" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="wwwroot\images\CoatofArms.png" />
+  </ItemGroup>
 
 
   <ItemGroup>
