@@ -10,10 +10,6 @@
     <None Remove="Views\Home\StyleCSS1.css" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Content Include="wwwroot\images\CoatofArms.png" />
-  </ItemGroup>
-
 
   <ItemGroup>
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.0.0" />
