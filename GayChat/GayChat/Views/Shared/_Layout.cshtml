@@ -15,71 +15,68 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="~/css/materialize.css" rel="stylesheet" />
 
-    <script src="~/lib/jquery/dist/jquery.js"></script> 
+    <script src="~/lib/jquery/dist/jquery.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
 
     <environment names="Development">
-        <link rel="stylesheet" href="~/css/site.css" />
+        @*<link rel="stylesheet" href="~/css/site.css" />*@
     </environment>
     <environment names="Staging,Production">
         <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/css/bootstrap.min.css"
               asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
               asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
-        <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
+        @*<link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />*@
     </environment>
     @Html.Raw(JavaScriptSnippet.FullScript)
 </head>
 <body>
 
 
+    <div class="navbar-fixed">
+        <nav>
+            <div class="nav-wrapper">
+                <a data-activates="slide-out" class="button-collapse brand-left center" style="display: block; cursor: pointer"><i class="material-icons">menu</i></a>
+                <a href="/Home/Index" class="brand-logo center" style="letter-spacing: 2px">Gay Chat</a>
 
-    <nav>
-        <div class="nav-wrapper">
-            <a data-activates="slide-out" class="button-collapse brand-left center" style="display: block; cursor: pointer"><i class="material-icons">menu</i></a>
-            <a href="/Home/Index" class="brand-logo center" style="letter-spacing: 2px">Gay Chat</a>
-
-            <ul class="left hide-on-med-and-down" style="margin-left: 100px">
-                <li><a href="/Home/About">My Account</a></li>
-                <li><a href="/Home/About">About</a></li>
-            </ul>
+                <ul class="left hide-on-med-and-down" style="margin-left: 100px">
+                    <li><a href="/Home/About">My Account</a></li>
+                    <li><a href="/Home/About">About</a></li>
+                </ul>
 
 
 
-            @if (SignInManager.IsSignedIn(User))
-            {
-                <form asp-area="" asp-controller="Account" asp-action="Logout" method="post" id="logoutForm">
+                @if (SignInManager.IsSignedIn(User))
+                {
+                    <form asp-area="" asp-controller="Account" asp-action="Logout" method="post" id="logoutForm">
+                        <ul class="right hide-on-med-and-down" style="margin-right: 150px;">
+
+                            <li><a>@((await UserManager.GetUserAsync(User)).Nickname) <img class="valign-wrapper" src="~/UserImages/@((await UserManager.GetUserAsync(User)).Nickname + ".jpg")" style="width: 50px; height: 50px; float: right; border-radius: 25px; margin-top: 7px; margin-left: 6px; border: 1px solid white" /></a></li>
+                            <li><a href="#" onclick="LogOut()">Log out</a></li>
+
+                        </ul>
+                    </form>
+                }
+                else
+                {
                     <ul class="right hide-on-med-and-down" style="margin-right: 150px;">
 
-                        <li><a>@((await UserManager.GetUserAsync(User)).Nickname)</a></li>
-                        <li><a href="#" onclick="LogOut()">Log off</a></li>
+                        <li><a href="/Account/Login">Login</a></li>
+                        <li><a href="/Account/Register">Register</a></li>
 
                     </ul>
-                </form>
-            }
-            else
-            {
-                <ul class="right hide-on-med-and-down" style="margin-right: 150px;">
-
-                    <li><a href="/Account/Login">Login</a></li>
-                    <li><a href="/Account/Register">Register</a></li>
-
-                </ul>
-            }
+                }
 
 
 
-        </div>
-    </nav>
+            </div>
+        </nav>
+    </div>
 
     <ul id="slide-out" class="side-nav"></ul>
 
 
-    <div style="margin: 50px">
+    @RenderBody()
 
-        @RenderBody()
-
-    </div>
-    
     <script>
 
         function LogOut() {
@@ -105,7 +102,7 @@
 
     <environment names="Development">
         <script src="~/lib/jquery/dist/jquery.js"></script>
-        <script src="~/js/site.js" asp-append-version="true"></script>
+        @*<script src="~/js/site.js" asp-append-version="true"></script>*@
     </environment>
     <environment names="Staging,Production">
         <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-2.2.0.min.js"
