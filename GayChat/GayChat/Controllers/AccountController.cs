@@ -116,7 +116,7 @@ namespace GayChat.Controllers
                 if (model.Image != null)
                     if (model.Image.Length > 0)
                     {
-                        string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "UserImages", model.Username + ".jpg");
+                        string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "UserImages", model.Username.Replace(" ", string.Empty) + ".jpg");
 
                         using (var fileStream = new FileStream(path, FileMode.Create))
                         {
