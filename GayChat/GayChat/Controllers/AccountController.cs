@@ -103,6 +103,15 @@ namespace GayChat.Controllers
             return View();
         }
 
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult GetUsers()
+        {
+            var users = _userManager.Users.ToList();
+
+            return View(users);
+        }
+
         //
         // POST: /Account/Register
         [HttpPost]

@@ -1,0 +1,21 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@inject UserManager<ApplicationUser> Manager
+
+@model List<ApplicationUser>
+
+
+@foreach(var user in Model)
+{
+    <p>@user.Nickname - @user.Id</p>
+
+}
+
+@{ 
+    var USER = await Manager.FindByIdAsync("855e61d0-166b-4303-be07-e340a7622f7f");
+}
+
+<p>
+    @USER.Nickname @USER.Email @USER.Id
+</p>
