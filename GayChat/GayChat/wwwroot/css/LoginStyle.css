@@ -1,0 +1,38 @@
+.Title1 {
+    color: rgba(0, 0, 0, 1);
+    font-size: 35px;
+    font-weight: 300;
+    margin-bottom: 24px;
+    text-align: center;
+    margin-top:25%;
+}
+.Title2 {
+    color: rgba(0, 0, 0, 1);
+    font-size: 20px;
+    font-weight: 300;
+    margin-bottom: 24px;
+    text-align: center;
+}
+.BUTT1 {
+    align-items: center;
+    display: flex;
+    margin-left: auto;
+    margin-right: auto;
+    overflow: hidden;
+}
+.REMEMBER1 {
+    margin-top: 24px;
+    text-align: center;
+    
+}
+.BottomStuff1 {
+    margin-top:15%;
+}
+#REG1 {
+    float:left;
+    margin-left:20px;
+}
+#NOACC1 {
+    float: right;
+    margin-right: 20px;
+}
