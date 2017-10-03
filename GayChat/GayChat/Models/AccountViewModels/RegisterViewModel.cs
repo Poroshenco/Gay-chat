@@ -14,8 +14,19 @@ namespace GayChat.Models.AccountViewModels
         public string Email { get; set; }
 
         [Required]
+        [StringLength(20, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 4)]
         [Display(Name = "Username")]
         public string Username { get; set; }
+
+        [Required]
+        [StringLength(10, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 3)]
+        [Display(Name = "First name")]
+        public string FirstName { get; set; }
+
+        [Required]
+        [StringLength(10, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 3)]
+        [Display(Name = "Surname")]
+        public string Surname { get; set; }
 
         public Microsoft.AspNetCore.Http.IFormFile Image { get; set; }
 

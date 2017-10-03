@@ -105,11 +105,47 @@ namespace GayChat.Controllers
 
         [HttpGet]
         [AllowAnonymous]
+        public IActionResult FindUsers()
+        {
+            var users = _userManager.Users.ToList();
+
+            return View(users);
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        public IActionResult FindUsers(string data)
+        {
+            var users = _userManager.Users.ToList();
+
+            if (!string.IsNullOrEmpty(data))
+                users = users
+                    .Where(e => e.Nickname.ToLower().Contains(data) ||
+                    (e.FirstName + " " + e.Surname).ToLower().Contains(data) ||
+                    e.Email.ToLower().Contains(data))
+                    .ToList();
+
+            ViewBag.Searched = data;
+
+            return View(users);
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
         public IActionResult GetUsers()
         {
             var users = _userManager.Users.ToList();
 
             return View(users);
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> DeleteUser(string id)
+        {
+            await _userManager.DeleteAsync(await _userManager.FindByIdAsync(id));
+
+            return RedirectToAction("GetUsers");
         }
 
         //
@@ -120,6 +156,7 @@ namespace GayChat.Controllers
         public async Task<IActionResult> Register(RegisterViewModel model, string returnUrl = null)
         {
             ViewData["ReturnUrl"] = returnUrl;
+
             if (ModelState.IsValid)
             {
                 if (model.Image != null)
@@ -133,7 +170,7 @@ namespace GayChat.Controllers
                         }
                     }
 
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email, Nickname = model.Username };
+                var user = new ApplicationUser { UserName = model.Email, Email = model.Email, Nickname = "@" + model.Username, Surname = model.Surname, FirstName = model.FirstName };
                 var result = await _userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {

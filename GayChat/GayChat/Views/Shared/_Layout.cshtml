@@ -1,6 +1,7 @@
 ﻿@inject Microsoft.ApplicationInsights.AspNetCore.JavaScriptSnippet JavaScriptSnippet
 @using Microsoft.AspNetCore.Identity
 @using GayChat.Models
+@using GayChat.Extensions
 
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
@@ -32,12 +33,22 @@
 <body>
 
     @{
-        string nickname = "", image = "";
+        string usernameWidth = "60%";
+        if (Context.Request.IsMobile())
+        {
+            usernameWidth = "50%";
+        }
+
+        string nickname = "", image = "", fname = "", surname = "";
 
         if (SignInManager.IsSignedIn(User))
         {
-            nickname = (await UserManager.GetUserAsync(User)).Nickname;
-            image = nickname.Replace(" ", string.Empty) + ".jpg";
+            var user = await UserManager.GetUserAsync(User);
+
+            nickname = user.Nickname;
+            image = nickname.Substring(1).Replace(" ", string.Empty) + ".jpg";
+            fname = user.FirstName;
+            surname = user.Surname;
         }
     }
 
@@ -48,7 +59,8 @@
                 <a href="/Home/Index" class="brand-logo center" style="letter-spacing: 2px">Gay Chat</a>
 
                 <ul class="left hide-on-med-and-down" style="margin-left: 100px">
-                    <li><a href="/Account/GetUsers">Users</a></li>
+                    <li><a href="/Account/GetUsers">Admin</a></li>
+                    <li><a href="/Account/FindUsers">Find</a></li>
                     <li><a href="/Home/About">About</a></li>
                 </ul>
 
@@ -59,8 +71,7 @@
                     <form asp-area="" asp-controller="Account" asp-action="Logout" method="post" id="logoutForm">
                         <ul class="right hide-on-med-and-down" style="margin-right: 150px;">
 
-
-                            <li><a>@nickname <img class="valign-wrapper" src="~/UserImages/@image" style="width: 50px; height: 50px; float: right; border-radius: 25px; margin-top: 7px; margin-left: 6px; border: 1px solid white" /></a></li>
+                            <li><a>@fname @surname <img class="valign-wrapper" src="~/UserImages/@image" style="width: 50px; height: 50px; float: right; border-radius: 25px; margin-top: 7px; margin-left: 6px; border: 1px solid white" /></a></li>
                             <li><a href="#" onclick="LogOut()">Log out</a></li>
 
                         </ul>
@@ -95,29 +106,24 @@
                     
                     <div style="height: 80px; margin-top: 20px">
                         <a><img class="circle" src="~/UserImages/@image" style="margin: 0px; float: left; height: 64px; width: 64px"></a>
-                        <a href="#"><span class="white-text name" style="font-size: 17px; float: left; margin: 0px; margin-top: 1px; margin-left: 10px">@nickname</span></a>
-                        <a href="#"><span class="white-text name" style="font-size: 13px; float: left; margin: 0px; margin-left: 10px">@User.Identity.Name</span></a>
+                        <a href="#"><span class="white-text name" style="font-size: 17px; float: left; margin: 0px; margin-top: 1px; margin-left: 10px; width: @usernameWidth">@fname @surname</span></a>
+                        <a href="#"><span class="white-text name" style="font-size: 13px; float: left; margin: 0px; margin-left: 10px">@nickname</span></a>
                     </div>
                 </div>
             </li>
+            <li><a class="subheader">Communication</a></li>
+            <li><a class="waves-effect" href="#!"><i class="small material-icons" style="margin-right: 10px">supervisor_account</i>Contacts</a></li>
+            <li><a class="waves-effect" href="#!"><i class="small material-icons" style="margin-right: 10px">sms</i>Chats</a></li>
+            <li><a class="waves-effect" href="/Account/FindUsers"><i class="small material-icons" style="margin-right: 10px">search</i>New Friends</a></li>
+
+            <li><div class="divider"></div></li>
+            <li><a class="waves-effect" href="#!"><i class="small material-icons" style="margin-right: 10px">settings</i>Account settings</a></li>
         }
         else
         {
             <li><a class="subheader">Account</a></li>
             <li><a class="waves-effect" href="/Account/Register"><i class="small material-icons" style="margin-right: 10px">assignment_ind</i>Sign Up</a></li>
             <li><a class="waves-effect" href="/Account/Login"><i class="small material-icons" style="margin-right: 10px">account_circle</i>Sign In</a></li>
-        }
-
-
-        @if (SignInManager.IsSignedIn(User))
-        {
-            <li><a class="subheader">Communication</a></li>
-            <li><a class="waves-effect" href="#!"><i class="small material-icons" style="margin-right: 10px">supervisor_account</i>Contacts</a></li>
-            <li><a class="waves-effect" href="#!"><i class="small material-icons" style="margin-right: 10px">sms</i>Chats</a></li>
-
-
-            <li><div class="divider"></div></li>
-            <li><a class="waves-effect" href="#!"><i class="small material-icons" style="margin-right: 10px">settings</i>Account settings</a></li>
         }
     </ul>
 
