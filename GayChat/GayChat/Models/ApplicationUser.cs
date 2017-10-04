@@ -14,12 +14,12 @@ namespace GayChat.Models
         public string FirstName { get; set; }
 
         public string Surname { get; set; }
+        
+        //public List<Friend> Friends { get; set; }
 
-        public List<Friend> Friends { get; set; }
-
-        public ApplicationUser()
-        {
-            Friends = new List<Friend>();
-        }
+        //public ApplicationUser()
+        //{
+        //    Friends = new List<Friend>();
+        //}
     }
 }
