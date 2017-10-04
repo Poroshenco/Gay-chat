@@ -13,6 +13,8 @@ using GayChat.Models;
 using GayChat.Models.AccountViewModels;
 using GayChat.Services;
 using System.IO;
+using GayChat.Models.ITCHat;
+using System.Text;
 
 namespace GayChat.Controllers
 {
@@ -103,51 +105,6 @@ namespace GayChat.Controllers
             return View();
         }
 
-        [HttpGet]
-        [AllowAnonymous]
-        public IActionResult FindUsers()
-        {
-            var users = _userManager.Users.ToList();
-
-            return View(users);
-        }
-
-        [HttpPost]
-        [AllowAnonymous]
-        public IActionResult FindUsers(string data)
-        {
-            var users = _userManager.Users.ToList();
-
-            if (!string.IsNullOrEmpty(data))
-                users = users
-                    .Where(e => e.Nickname.ToLower().Contains(data) ||
-                    (e.FirstName + " " + e.Surname).ToLower().Contains(data) ||
-                    e.Email.ToLower().Contains(data))
-                    .ToList();
-
-            ViewBag.Searched = data;
-
-            return View(users);
-        }
-
-        [HttpGet]
-        [AllowAnonymous]
-        public IActionResult GetUsers()
-        {
-            var users = _userManager.Users.ToList();
-
-            return View(users);
-        }
-
-        [HttpGet]
-        [AllowAnonymous]
-        public async Task<IActionResult> DeleteUser(string id)
-        {
-            await _userManager.DeleteAsync(await _userManager.FindByIdAsync(id));
-
-            return RedirectToAction("GetUsers");
-        }
-
         //
         // POST: /Account/Register
         [HttpPost]
@@ -189,6 +146,101 @@ namespace GayChat.Controllers
 
             // If we got this far, something failed, redisplay form
             return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AcceptInvite(string subscriberId)
+        {
+            var current = await _userManager.FindByEmailAsync(HttpContext.User.Identity.Name);
+
+            if(current.Friends.Find(e => Encoding.UTF8.GetString(e.FriendIdInBytes) == subscriberId) != null)
+            {
+                var subscriber = await _userManager.FindByIdAsync(subscriberId);
+
+                current.Friends.Find(e => Encoding.UTF8.GetString(e.FriendIdInBytes) == subscriberId).Status = FriendStatus.Accepted;
+                subscriber.Friends.Find(e => Encoding.UTF8.GetString(e.FriendIdInBytes) == current.Id).Status = FriendStatus.Accepted;
+
+                await _userManager.UpdateAsync(current);
+                await _userManager.UpdateAsync(subscriber);
+            }
+
+            return RedirectToAction("Contacts", controllerName: "Account");
+        }
+
+
+
+        [HttpPost]
+        public async Task<IActionResult> Invite(string friendId)
+        {
+            var current = await _userManager.FindByEmailAsync(HttpContext.User.Identity.Name);
+
+            if (current.Friends.Find(e => e.FriendIdInBytes == Encoding.UTF8.GetBytes(friendId)) != null)
+            {
+                var friend = await _userManager.FindByIdAsync(friendId);
+
+                current.Friends.Add(new Friend { FriendIdInBytes = Encoding.UTF8.GetBytes(friend.Id), Status = FriendStatus.Invited });
+                friend.Friends.Add(new Friend { FriendIdInBytes = Encoding.UTF8.GetBytes(current.Id), Status = FriendStatus.Subscriber });
+
+                current.FirstName = "Penis";
+
+                await _userManager.UpdateAsync(current);
+            }
+
+            return RedirectToAction("Contacts", controllerName: "Account");
+        }
+
+
+
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult FindUsers()
+        {
+            var users = _userManager.Users.ToList();
+
+            return View(users);
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        public IActionResult FindUsers(string data)
+        {
+            var users = _userManager.Users.ToList();
+
+            if (!string.IsNullOrEmpty(data))
+                users = users
+                    .Where(e => e.Nickname.ToLower().Contains(data) ||
+                    (e.FirstName + " " + e.Surname).ToLower().Contains(data) ||
+                    e.Email.ToLower().Contains(data))
+                    .ToList();
+
+            ViewBag.Searched = data;
+
+            return View(users);
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult GetUsers()
+        {
+            var users = _userManager.Users.ToList();
+
+            return View(users);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> DeleteUser(string id)
+        {
+            await _userManager.DeleteAsync(await _userManager.FindByIdAsync(id));
+
+            return RedirectToAction("GetUsers");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Contacts()
+        {
+            var user = await _userManager.FindByEmailAsync(HttpContext.User.Identity.Name);
+
+            return View();
         }
 
         //

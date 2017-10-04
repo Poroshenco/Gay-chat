@@ -1,0 +1,20 @@
+
+@{
+    ViewData["Title"] = "Contacts";
+}
+
+@inject UserManager<ApplicationUser> UserManager
+
+@{
+    var user = await UserManager.GetUserAsync(User);
+
+
+    if (user.Friends.Count > 0)
+    {
+        foreach (var item in user.Friends)
+        {
+            <h3>@item.FriendId -- @item.Status</h3>
+        }
+    }
+
+}

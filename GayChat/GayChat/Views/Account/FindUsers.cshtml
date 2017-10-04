@@ -5,32 +5,57 @@
 
 @inject UserManager<ApplicationUser> Manager
 
-    @model List<ApplicationUser>
+@model List<ApplicationUser>
 
-        <form asp-action="FindUsers" asp-controller="Account" method="post">
-            <div style=" width: 245px; margin: auto; margin-top: 30px; overflow: hidden; height: 46px; box-shadow: 0px 0px 8px rgba(0,0,0,0.3)">
-                <input value="@ViewBag.Searched" name="data" placeholder="Find your friends" style="padding-left: 10px; float: left; width: 180px" />
-                <button type="submit" class="btn" style="float: left; width: 54px; height: 45px; padding: 0px; padding-left: 3px; padding-top: 5px"><i class="material-icons">search</i></button>
-            </div>
-        </form>
+<form asp-action="FindUsers" asp-controller="Account" method="post">
+    <div style=" width: 245px; margin: auto; margin-top: 30px; overflow: hidden; height: 46px; box-shadow: 0px 0px 8px rgba(0,0,0,0.3)">
+        <input value="@ViewBag.Searched" name="data" placeholder="Find your friends" style="padding-left: 10px; float: left; width: 180px" />
+        <button type="submit" class="btn" style="float: left; width: 54px; height: 45px; padding: 0px; padding-left: 3px; padding-top: 5px"><i class="material-icons">search</i></button>
+    </div>
+</form>
 
-        <div class="container" style="margin-top: 30px; box-shadow: 0px 5px 15px rgba(0,0,0,0.5)">
+<div class="container" style="margin-top: 30px; box-shadow: 0px 5px 15px rgba(0,0,0,0.5)">
 
-            <ul class="collection">
-                @foreach (var user in Model)
+    <ul class="collection">
+        @foreach (var user in Model)
             {
                 string image = user.Nickname.Substring(1).Replace(" ", string.Empty) + ".jpg";
 
-                    <li class="collection-item avatar" style="background-color: white;">
-                        <img src="~/UserImages/@image" style="border: 2px solid #03a9f4; width: 70px; height: 70px" class="circle">
-                        <span class="title" style="margin-left: 20px;">@user.FirstName @user.Surname</span>
-                        <p style="margin-left: 20px; font-size: 12px">
-                            @user.Nickname <br>
-                            @user.Email
-                        </p>
-                        <a href="#!" class="secondary-content waves-effect waves-light btn" style="width: 50px; padding: 0px"><i class="material-icons" style="margin-left: 5px">send</i></a>
-                        <a href="#!" class="secondary-content waves-effect waves-light btn" style="margin-right: 70px">Add</a>
-                    </li>
-            }
-            </ul>
-        </div>
+            <li class="collection-item avatar" style="background-color: white;">
+                <img src="~/UserImages/@image" style="border: 2px solid #03a9f4; width: 70px; height: 70px" class="circle">
+                <span class="title" style="margin-left: 20px;">@user.FirstName @user.Surname</span>
+                <p style="margin-left: 20px; font-size: 12px">
+                    @user.Nickname <br>
+                    @user.Email
+                </p>
+                <a href="#!" class="secondary-content waves-effect waves-light btn" style="width: 50px; padding: 0px"><i class="material-icons" style="margin-left: 5px">send</i></a>
+
+                <a onclick="InviteFriend('@user.Id')" class="secondary-content waves-effect waves-light btn" style="margin-right: 70px">Add</a>
+                
+            </li>
+        }
+
+        <form asp-action="Invite" asp-controller="Account" method="post" id="InvitationForm">
+
+        </form>
+        
+    </ul>
+</div>
+
+<script>
+
+    function InviteFriend(friendId) {
+
+        var form = document.getElementById('InvitationForm');
+
+        var input = document.createElement("input");
+        input.name = "friendId";
+        input.value = friendId;
+        input.type = "hidden";
+
+        form.appendChild(input);
+
+        form.submit();
+    }
+
+</script>
