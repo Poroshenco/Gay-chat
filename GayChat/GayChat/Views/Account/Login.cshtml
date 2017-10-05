@@ -1,4 +1,5 @@
 ﻿@using System.Collections.Generic
+@using GayChat.Extensions
 @using Microsoft.AspNetCore.Http
 @using Microsoft.AspNetCore.Http.Authentication
 @model LoginViewModel
@@ -6,58 +7,64 @@
 
 @{
     ViewData["Title"] = "Log in";
-}
-<head>
-    <link href="~/css/LoginStyle.css" rel="stylesheet"  />
-</head>
 
-    <h4 class="Title1">@ViewData["Title"]</h4>
-    <h6 class="Title2">Sign in to start</h6>
-<div class="row">
-    <div class="col-md-8">
+    string width = "400px";
+    string fontsizeForTitle = "24px";
+
+    if (Context.Request.IsMobile())
+    {
+        width = "300px";
+        fontsizeForTitle = "20px";
+    }
+
+}
+
+<link href="~/css/LoginStyle.css" rel="stylesheet" />
+
+<div style="width: @width; margin: auto; margin-top: 5%; box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.4); padding-top: 10px; padding-bottom: 10px">
+    <p class="Title2" style="font-size: @fontsizeForTitle">Sign In</p>
+    <div class="row">
         <section>
             <form asp-controller="Account" asp-action="Login" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form-horizontal">
-                <hr />
                 <div asp-validation-summary="All" class="text-danger"></div>
-                <div class="form-group">
-                    <label asp-for="Email" class="col-md-2 control-label"></label>
-                    <div class="col-md-10">
-                        <input asp-for="Email" class="form-control" />
-                        <span asp-validation-for="Email" class="text-danger"></span>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Password" class="col-md-2 control-label"></label>
-                    <div class="col-md-10">
-                        <input asp-for="Password" class="form-control" />
-                        <span asp-validation-for="Password" class="text-danger"></span>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-md-offset-2 col-md-10 " >
-                        <button type="submit" class="btn btn-default BUTT1">Log in</button>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-md-offset-2 col-md-10">
-                        <div class="checkbox REMEMBER1">
-                            <label asp-for="RememberMe">
-                                <input asp-for="RememberMe" />
-                                @Html.DisplayNameFor(m => m.RememberMe)
-                            </label>
+                @*<div class="form-group">
+                        <label asp-for="Email" class="col-md-2 control-label"></label>
+                        <div class="col-md-10">
+                            <input asp-for="Email" class="form-control" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
                         </div>
+                    </div>*@
+
+                <div class="row" style="width: 70%; margin: auto; margin-bottom: 18px">
+                    <div class="input-field">
+                        <input asp-for="Email" type="email" class="validate" style="margin: 0px">
+                        <label for="email" asp-for="Email">Email</label>
                     </div>
                 </div>
-                <p class="BottomStuff1" id="REG1">
-                    <a asp-action="Register" asp-route-returnurl="@ViewData["ReturnUrl"]">Register as a new user?</a>
-                </p>
-                <p class ="BottomStuff1" id="NOACC1">
-                    <a asp-action="ForgotPassword">Forgot your password?</a>
-                </p>
+
+                <div class="row" style="width: 70%; margin: auto;">
+                    <div class="input-field" style="margin-top: 2px">
+                        <input asp-for="Password" type="password" class="validate" style="margin: 0px">
+                        <label for="password" asp-for="Password">Password</label>
+                    </div>
+                    <a asp-action="ForgotPassword" style="margin: 0;">Forgot your password?</a>
+                </div>
+
+                @*<div class="form-group">
+                        <label asp-for="Password" class="col-md-2 control-label"></label>
+                        <div class="col-md-10">
+                            <input asp-for="Password" class="form-control" />
+                            <span asp-validation-for="Password" class="text-danger"></span>
+                        </div>
+                    </div>*@
+
+                <button type="submit" class="btn waves-effect waves-light BUTT1" style="margin-top: 16px">Log in</button>
+
             </form>
         </section>
     </div>
-   
+</div>
+
 
 @section Scripts {
     @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }

@@ -1,16 +1,9 @@
-.Title1 {
-    color: rgba(0, 0, 0, 1);
-    font-size: 35px;
-    font-weight: 300;
-    margin-bottom: 24px;
-    text-align: center;
-    margin-top:25%;
-}
+
 .Title2 {
     color: rgba(0, 0, 0, 1);
-    font-size: 20px;
     font-weight: 300;
-    margin-bottom: 24px;
+    margin-top: 10px;
+    margin-bottom: 0;
     text-align: center;
 }
 .BUTT1 {
@@ -21,7 +14,6 @@
     overflow: hidden;
 }
 .REMEMBER1 {
-    margin-top: 24px;
     text-align: center;
     
 }
