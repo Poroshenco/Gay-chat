@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using GayChat.Data;
-using GayChat.Models.ITCHat;
 
 namespace GayChat.Data.Migrations
 {
@@ -33,6 +32,8 @@ namespace GayChat.Data.Migrations
                     b.Property<bool>("EmailConfirmed");
 
                     b.Property<string>("FirstName");
+
+                    b.Property<string>("Friends_JSON");
 
                     b.Property<bool>("LockoutEnabled");
 
@@ -71,22 +72,6 @@ namespace GayChat.Data.Migrations
                         .HasName("UserNameIndex");
 
                     b.ToTable("AspNetUsers");
-                });
-
-            modelBuilder.Entity("GayChat.Models.ITCHat.Friend", b =>
-                {
-                    b.Property<string>("FriendId")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("ApplicationUserId");
-
-                    b.Property<int>("Status");
-
-                    b.HasKey("FriendId");
-
-                    b.HasIndex("ApplicationUserId");
-
-                    b.ToTable("Friend");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityRole", b =>
@@ -194,13 +179,6 @@ namespace GayChat.Data.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
-                });
-
-            modelBuilder.Entity("GayChat.Models.ITCHat.Friend", b =>
-                {
-                    b.HasOne("GayChat.Models.ApplicationUser")
-                        .WithMany("Friends")
-                        .HasForeignKey("ApplicationUserId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityRoleClaim<string>", b =>

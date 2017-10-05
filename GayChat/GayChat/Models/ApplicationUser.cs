@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using GayChat.Models.ITCHat;
+using Newtonsoft.Json;
 
 namespace GayChat.Models
 {
@@ -14,12 +16,22 @@ namespace GayChat.Models
         public string FirstName { get; set; }
 
         public string Surname { get; set; }
-        
-        //public List<Friend> Friends { get; set; }
 
-        //public ApplicationUser()
-        //{
-        //    Friends = new List<Friend>();
-        //}
+        public string Friends_JSON
+        {
+            get { return JsonConvert.SerializeObject(Friends); }
+            set
+            {
+                if (!string.IsNullOrEmpty(value)) { Friends = JsonConvert.DeserializeObject<List<Friend>>(value); }
+            }
+        }
+
+        [NotMapped]
+        public List<Friend> Friends { get; set; }
+
+        public ApplicationUser()
+        {
+            Friends = new List<Friend>();
+        }
     }
 }

@@ -153,12 +153,12 @@ namespace GayChat.Controllers
         {
             var current = await _userManager.FindByEmailAsync(HttpContext.User.Identity.Name);
 
-            if(current.Friends.Find(e => Encoding.UTF8.GetString(e.FriendIdInBytes) == subscriberId) != null)
+            if(current.Friends.Find(e => e.FriendId == subscriberId) != null)
             {
                 var subscriber = await _userManager.FindByIdAsync(subscriberId);
 
-                current.Friends.Find(e => Encoding.UTF8.GetString(e.FriendIdInBytes) == subscriberId).Status = FriendStatus.Accepted;
-                subscriber.Friends.Find(e => Encoding.UTF8.GetString(e.FriendIdInBytes) == current.Id).Status = FriendStatus.Accepted;
+                current.Friends.Find(e => e.FriendId == subscriberId).Status = FriendStatus.Accepted;
+                subscriber.Friends.Find(e => e.FriendId == current.Id).Status = FriendStatus.Accepted;
 
                 await _userManager.UpdateAsync(current);
                 await _userManager.UpdateAsync(subscriber);
@@ -174,16 +174,16 @@ namespace GayChat.Controllers
         {
             var current = await _userManager.FindByEmailAsync(HttpContext.User.Identity.Name);
 
-            if (current.Friends.Find(e => e.FriendIdInBytes == Encoding.UTF8.GetBytes(friendId)) != null)
+            if (current.Friends.Find(e => e.FriendId == friendId) == null)
             {
                 var friend = await _userManager.FindByIdAsync(friendId);
 
-                current.Friends.Add(new Friend { FriendIdInBytes = Encoding.UTF8.GetBytes(friend.Id), Status = FriendStatus.Invited });
-                friend.Friends.Add(new Friend { FriendIdInBytes = Encoding.UTF8.GetBytes(current.Id), Status = FriendStatus.Subscriber });
-
-                current.FirstName = "Penis";
-
+                current.Friends.Add(new Friend { FriendId = friend.Id, Status = FriendStatus.Invited });
+                friend.Friends.Add(new Friend { FriendId = current.Id, Status = FriendStatus.Subscriber });
+                
                 await _userManager.UpdateAsync(current);
+                await _userManager.UpdateAsync(friend);
+
             }
 
             return RedirectToAction("Contacts", controllerName: "Account");

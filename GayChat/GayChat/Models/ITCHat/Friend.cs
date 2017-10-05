@@ -7,7 +7,7 @@ namespace GayChat.Models.ITCHat
 {
     public class Friend
     {
-        public byte[] FriendIdInBytes { get; set; }
+        public string FriendId { get; set; }
 
         public FriendStatus Status { get; set; }
     }
