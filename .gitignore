@@ -220,3 +220,7 @@ GayChat/GayChat/wwwroot/UserImages/shot_020.jpg
 GayChat/GayChat/wwwroot/UserImages/Donald Trump.jpg
 GayChat/GayChat/wwwroot/UserImages/RUSSIA.jpg
 GayChat/GayChat/wwwroot/UserImages/donaldtrump_america.jpg
+GayChat/GayChat/Data/Migrations/20171004210445_deletedFriendIdInBytes.Designer.cs
+*.jpg
+GayChat/GayChat/Data/Migrations/20171004210445_deletedFriendIdInBytes.cs
+GayChat/GayChat/Data/Migrations/20171004205449_Friends_json.Designer.cs
