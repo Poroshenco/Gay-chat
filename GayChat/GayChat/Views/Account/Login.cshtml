@@ -8,20 +8,22 @@
 @{
     ViewData["Title"] = "Log in";
 
-    string width = "400px";
-    string fontsizeForTitle = "24px";
+    string width = "450px";
+    string fontsizeForTitle = "25px";
+    string inputWeight = "70%";
 
     if (Context.Request.IsMobile())
     {
         width = "300px";
         fontsizeForTitle = "20px";
+        inputWeight = "80%";
     }
 
 }
 
 <link href="~/css/LoginStyle.css" rel="stylesheet" />
 
-<div style="width: @width; margin: auto; margin-top: 5%; box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.4); padding-top: 10px; padding-bottom: 10px">
+<div style="width: @width; margin: auto; margin-top: 5%; box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.4); padding-top: 7px; padding-bottom: 1px">
     <p class="Title2" style="font-size: @fontsizeForTitle">Sign In</p>
     <div class="row">
         <section>
@@ -35,14 +37,14 @@
                         </div>
                     </div>*@
 
-                <div class="row" style="width: 70%; margin: auto; margin-bottom: 18px">
+                <div class="row" style="width: @inputWeight; margin: auto; margin-bottom: 18px">
                     <div class="input-field">
                         <input asp-for="Email" type="email" class="validate" style="margin: 0px">
                         <label for="email" asp-for="Email">Email</label>
                     </div>
                 </div>
 
-                <div class="row" style="width: 70%; margin: auto;">
+                <div class="row" style="width: @inputWeight; margin: auto;">
                     <div class="input-field" style="margin-top: 2px">
                         <input asp-for="Password" type="password" class="validate" style="margin: 0px">
                         <label for="password" asp-for="Password">Password</label>
@@ -58,7 +60,7 @@
                         </div>
                     </div>*@
 
-                <button type="submit" class="btn waves-effect waves-light BUTT1" style="margin-top: 16px">Log in</button>
+                <button type="submit" class="btn waves-effect waves-light BUTT1" style="margin-top: 14px">Log in</button>
 
             </form>
         </section>

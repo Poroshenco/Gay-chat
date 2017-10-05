@@ -12,6 +12,10 @@
     margin-left: auto;
     margin-right: auto;
     overflow: hidden;
+    height: 34px;
+    width: 130px;
+    font-size: 13px;
+    padding-left: 40px;
 }
 .REMEMBER1 {
     text-align: center;
