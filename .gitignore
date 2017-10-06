@@ -224,3 +224,4 @@ GayChat/GayChat/Data/Migrations/20171004210445_deletedFriendIdInBytes.Designer.c
 *.jpg
 GayChat/GayChat/Data/Migrations/20171004210445_deletedFriendIdInBytes.cs
 GayChat/GayChat/Data/Migrations/20171004205449_Friends_json.Designer.cs
+GayChat/GayChat/Migrations/ApplicationDbContextModelSnapshot.cs
