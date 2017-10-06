@@ -99,11 +99,11 @@
         {
             <li>
                 <div class="user-view" style="padding: 12px">
-                    
+
                     <div class="background">
                         <img src="http://p1.pichost.me/i/55/1790359.jpg">
                     </div>
-                    
+
                     <div style="height: 80px; margin-top: 20px">
                         <a><img class="circle" src="~/UserImages/@image" style="margin: 0px; float: left; height: 64px; width: 64px"></a>
                         <a href="#"><span class="white-text name" style="font-size: 17px; float: left; margin: 0px; margin-top: 1px; margin-left: 10px; width: @usernameWidth">@fname @surname</span></a>
@@ -112,7 +112,7 @@
                 </div>
             </li>
             <li><a class="subheader">Communication</a></li>
-            <li><a class="waves-effect" href="#!"><i class="small material-icons" style="margin-right: 10px">supervisor_account</i>Contacts</a></li>
+            <li><a class="waves-effect" href="/Account/Contacts"><i class="small material-icons" style="margin-right: 10px">supervisor_account</i>Contacts</a></li>
             <li><a class="waves-effect" href="#!"><i class="small material-icons" style="margin-right: 10px">sms</i>Chats</a></li>
             <li><a class="waves-effect" href="/Account/FindUsers"><i class="small material-icons" style="margin-right: 10px">search</i>New Friends</a></li>
 
@@ -138,6 +138,8 @@
 
         (function ($) {
             $(function () {
+
+                $('.materialboxed').materialbox();
 
                 $('.button-collapse').sideNav({
                     menuWidth: 300, // Default is 300

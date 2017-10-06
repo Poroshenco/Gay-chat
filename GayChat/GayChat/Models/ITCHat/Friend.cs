@@ -16,6 +16,7 @@ namespace GayChat.Models.ITCHat
     {
         Accepted,
         Invited,
-        Subscriber
+        Subscriber,
+        None
     }
 }
