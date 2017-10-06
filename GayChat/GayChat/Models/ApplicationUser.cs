@@ -26,6 +26,17 @@ namespace GayChat.Models
             }
         }
 
+        public FriendStatus GetStatusForFriendId(string friendId)
+        {
+            foreach (var friend in Friends)
+            {
+                if (friend.FriendId == friendId)
+                    return friend.Status;
+            }
+
+            return FriendStatus.None;
+        }
+
         [NotMapped]
         public List<Friend> Friends { get; set; }
 

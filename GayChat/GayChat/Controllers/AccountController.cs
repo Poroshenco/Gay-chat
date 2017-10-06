@@ -15,6 +15,7 @@ using GayChat.Services;
 using System.IO;
 using GayChat.Models.ITCHat;
 using System.Text;
+using Microsoft.AspNetCore.Http;
 
 namespace GayChat.Controllers
 {
@@ -196,20 +197,21 @@ namespace GayChat.Controllers
         public IActionResult FindUsers()
         {
             var users = _userManager.Users.ToList();
+            users.RemoveAll(e => e.Email == HttpContext.User.Identity.Name);
 
             return View(users);
         }
 
         [HttpPost]
-        [AllowAnonymous]
         public IActionResult FindUsers(string data)
         {
             var users = _userManager.Users.ToList();
+            users.RemoveAll(e => e.Email == HttpContext.User.Identity.Name);
 
             if (!string.IsNullOrEmpty(data))
                 users = users
                     .Where(e => e.Nickname.ToLower().Contains(data) ||
-                    (e.FirstName + " " + e.Surname).ToLower().Contains(data) ||
+                    (e.FirstName + " " + e.Surname).ToLower().Contains(data.ToLower()) ||
                     e.Email.ToLower().Contains(data))
                     .ToList();
 
