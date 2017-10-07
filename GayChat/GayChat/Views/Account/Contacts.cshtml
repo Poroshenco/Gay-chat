@@ -1,6 +1,7 @@
 @using System.Net.Http
 @using GayChat.Extensions
 @using Microsoft.AspNetCore.Http
+@using GayChat.Models.ITCHat;
 
 @{
     ViewData["Title"] = "Contacts";
@@ -9,64 +10,213 @@
 @inject UserManager<ApplicationUser> UserManager
 
 @{
-    string tabsGrid = "col s8 offset-s2 ";
+    string tabsGrid = "col s6 offset-s3";
     string tabsFontSize = "18px";
+
+    string imageSize = "70px";
+    string friendInformationMargin = "20px";
+
+    var current = await UserManager.GetUserAsync(User);
+
+    var friends = current.Friends.Where(e => e.Status == FriendStatus.Accepted);
+    var subscribers = current.Friends.Where(e => e.Status == FriendStatus.Subscriber);
+    var invited = current.Friends.Where(e => e.Status == FriendStatus.Invited);
 
     if (Context.Request.IsMobile())
     {
         tabsGrid = "col s12";
-        tabsFontSize = "14px";
+        imageSize = "60px; margin-top: 2px; margin-left: -6px;";
+        tabsFontSize = "13px";
+        friendInformationMargin = "4px";
     }
 }
 
+<style>
+    .contactsTag {
+        height: 500px;
+        position: relative;
+        float: left;
+    }
 
-<div class="container" style="margin-top: 40px">
-        <div class="row @tabsGrid">
-            <div class="col s12" style="padding: 0px;">
-                <ul id="swipeable-tabs" class="tabs" style="border: 1px solid #40c4ff; border-bottom: 0; ">
-                    <li class="tab col s4"><a href="#test1" style="font-size: @tabsFontSize">Friends</a></li>
-                    <li class="tab col s4"><a href="#test2" style="font-size: @tabsFontSize">Invitations</a></li>
-                    <li class="tab col s4"><a href="#test3" style="font-size: @tabsFontSize">Subscribers</a></li>
-                </ul>
+    .contactsTagInner {
+        overflow-y: auto;
+        position: relative;
+        float: left;
+        margin-top: 1px;
+        height: 499px;
+        width: 100%;
+    }
+</style>
+
+
+<div class="container" style="margin-top: 20px">
+    <div class="row @tabsGrid">
+        <div class="col s12" style="padding: 0px; box-shadow: 0px 2px 4px rgba(0,0,0,0.2)">
+            <ul id="swipeable-tabs" class="tabs">
+                <li class="tab col s4" style="box-shadow: inset 0px 1px 3px rgba(0,0,0,0.1)"><a href="#test1" style="font-size: @tabsFontSize">Friends</a></li>
+                <li class="tab col s4" style="box-shadow: inset 0px 1px 3px rgba(0,0,0,0.1)"><a href="#test2" style="font-size: @tabsFontSize">Invitations</a></li>
+                <li class="tab col s4" style="box-shadow: inset 0px 1px 3px rgba(0,0,0,0.1)"><a href="#test3" style="font-size: @tabsFontSize; margin: 0px; padding: 0px">Subscribers</a></li>
+            </ul>
+        </div>
+
+
+        <div id="test1" class="col s12 contactsTag" style="margin: 0px; padding: 0px">
+            <div class="contactsTagInner">
+                @if (friends.Count() > 0)
+                {
+                    <ul class="collection" style="box-shadow: 0px 0px 7px rgba(0,0,0,0.3); margin: 7px">
+                        @foreach (var friend in friends)
+                        {
+                            var user = await UserManager.FindByIdAsync(friend.FriendId);
+
+                            string image = user.Nickname.Substring(1).Replace(" ", string.Empty) + ".jpg";
+
+                            <li class="collection-item avatar" style="background-color: white; box-shadow: inset 0px 0px 4px rgba(0,0,0,0.2)">
+                                <img class="materialboxed circle" src="~/UserImages/@image" style="border: 2px solid #03a9f4; width: @imageSize; height: @imageSize">
+                                <span class="title" style="margin-left: @friendInformationMargin;">@user.FirstName @user.Surname</span>
+                                <p style="margin-left: @friendInformationMargin; font-size: 12px">
+                                    @user.Nickname <br>
+                                    @user.Email
+                                </p>
+
+                                @if (!Context.Request.IsMobile())
+                                {
+                                    <a href="#!" class="secondary-content waves-effect waves-light btn" style="width: 120px; padding: 0px">
+                                        <p style="float: left; margin-left: 28px">CHAT</p>
+
+                                        <i class="material-icons" style="float: left; margin-left: 7px">send</i>
+                                    </a>
+                                }
+                                else
+                                {
+                                    <a href="#!" class="secondary-content waves-effect waves-light btn" style="padding: 0px; width: 50px;">
+                                        <i class="material-icons" style="margin-left: 4px">send</i>
+                                    </a>
+
+                                }
+
+                            </li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <div style="text-align: center; width: 350px; margin: auto; background-color: #4fc3f7; height: 120px; overflow: hidden; margin-top: 40px; box-shadow: 0px 2px 8px rgba(0,0,0,0.5)">
+                        <p style="font-size: 23px; color: white; margin-top: 10px">You haven't any friend yet</p>
+                        <button class="btn waves-effect" style="background-color: white; color: #039be5">Find friends</button>
+                    </div>
+
+                }
             </div>
+        </div>
 
 
-            <div id="test1" class="col s12 contactsTag">
-                <div class="contactsTagInner">
+        <div id="test2" class="col s12 contactsTag">
+            <div class="contactsTagInner">
+                @if (invited.Count() > 0)
+                {
+                    <ul class="collection" style="box-shadow: 0px 0px 7px rgba(0,0,0,0.3); margin: 7px">
+                        @foreach (var friend in invited)
+                        {
+                            var user = await UserManager.FindByIdAsync(friend.FriendId);
 
-                </div>
+                            string image = user.Nickname.Substring(1).Replace(" ", string.Empty) + ".jpg";
+
+                            <li class="collection-item avatar" style="background-color: white;">
+                                <img class="materialboxed circle" src="~/UserImages/@image" style="border: 2px solid #03a9f4; width: @imageSize; height: @imageSize">
+                                <span class="title" style="margin-left: @friendInformationMargin;">@user.FirstName @user.Surname</span>
+                                <p style="margin-left: @friendInformationMargin; font-size: 12px">
+                                    @user.Nickname <br>
+                                    @user.Email
+                                </p>
+
+                                @if (!Context.Request.IsMobile())
+                                {
+                                    <a href="#!" class="secondary-content waves-effect waves-light btn" style="width: 120px; padding: 0px">
+                                        <p style="float: left; margin-left: 28px">CHAT</p>
+
+                                        <i class="material-icons" style="float: left; margin-left: 7px">send</i>
+                                    </a>
+                                }
+                                else
+                                {
+                                    <a href="#!" class="secondary-content waves-effect waves-light btn" style="padding: 0px; width: 50px;">
+                                        <i class="material-icons" style="margin-left: 4px">send</i>
+                                    </a>
+
+                                }
+
+                            </li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <div style="text-align: center; width: 350px; margin: auto; background-color: #4fc3f7; height: 120px; overflow: hidden; margin-top: 40px; box-shadow: 0px 2px 8px rgba(0,0,0,0.5)">
+                        <p style="font-size: 18px; color: white; margin-top: 20px">You haven't sended any invitations yet</p>
+                        <button class="btn waves-effect" style="background-color: white; color: #039be5">Invite friends</button>
+                    </div>
+
+                }
             </div>
+        </div>
 
 
-            <div id="test2" class="col s12 contactsTag">
-                <div class="contactsTagInner">
+        <div id="test3" class="col s12 contactsTag" style="box-shadow: 0px 0px 7px rgba(0,0,0,0.3); margin: 7px">
+            <div class="contactsTagInner">
 
-                </div>
-            </div>
+                @if (subscribers.Count() > 0)
+                {
+                    <ul class="collection">
+                        @foreach (var friend in subscribers)
+                        {
+                            var user = await UserManager.FindByIdAsync(friend.FriendId);
 
+                            string image = user.Nickname.Substring(1).Replace(" ", string.Empty) + ".jpg";
 
-            <div id="test3" class="col s12 contactsTag">
-                <div class="contactsTagInner">
+                            <li class="collection-item avatar" style="background-color: white; box-shadow: 0px 0px 6px rgba(0,0,0,0.3)">
+                                <img class="materialboxed circle" src="~/UserImages/@image" style="border: 2px solid #03a9f4; width: @imageSize; height: @imageSize">
+                                <span class="title" style="margin-left: @friendInformationMargin;">@user.FirstName @user.Surname</span>
+                                <p style="margin-left: @friendInformationMargin; font-size: 12px">
+                                    @user.Nickname <br>
+                                    @user.Email
+                                </p>
 
-                </div>
+                                @if (!Context.Request.IsMobile())
+                                {
+                                    <a href="#!" class="secondary-content waves-effect waves-light btn" style="width: 120px; padding: 0px">
+                                        <p style="float: left; margin-left: 28px">CHAT</p>
+
+                                        <i class="material-icons" style="float: left; margin-left: 7px">send</i>
+                                    </a>
+                                }
+                                else
+                                {
+                                    <a href="#!" class="secondary-content waves-effect waves-light btn" style="padding: 0px; width: 50px;">
+                                        <i class="material-icons" style="margin-left: 4px">send</i>
+                                    </a>
+
+                                }
+
+                            </li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <div style="text-align: center; width: 350px; margin: auto; background-color: #4fc3f7; height: 60px; overflow: hidden; margin-top: 40px; box-shadow: 0px 2px 8px rgba(0,0,0,0.5)">
+                        <p style="font-size: 20px; color: white; margin-top: 16px">You haven't any subscribers yet</p>
+                    </div>
+
+                }
+
             </div>
         </div>
     </div>
+</div>
 
-    <style>
 
-        .contactsTag {
-            border: 10px solid #40c4ff;
-            border-top: 0px;
-        }
 
-        .contactsTagInner {
-            margin: 20px;
-            border: 1px solid red;
-            height: 200px;
-        }
-
-    </style>
 
 @*@{
         var user = await UserManager.GetUserAsync(User);

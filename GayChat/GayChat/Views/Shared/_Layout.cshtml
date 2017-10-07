@@ -59,7 +59,7 @@
                 <a href="/Home/Index" class="brand-logo center" style="letter-spacing: 2px">Gay Chat</a>
 
                 <ul class="left hide-on-med-and-down" style="margin-left: 100px">
-                    <li><a href="/Account/GetUsers">Admin</a></li>
+                    @*<li><a href="/Account/GetUsers">Admin</a></li>*@
                     <li><a href="/Account/FindUsers">Find</a></li>
                     <li><a href="/Home/About">About</a></li>
                 </ul>
@@ -139,7 +139,7 @@
         (function ($) {
             $(function () {
 
-                $('ul.tabs').tabs({swipeable: true});
+                $('ul.tabs').tabs();
 
                 $('.materialboxed').materialbox();
 
