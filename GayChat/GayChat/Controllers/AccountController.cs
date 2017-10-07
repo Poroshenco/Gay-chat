@@ -193,7 +193,6 @@ namespace GayChat.Controllers
 
 
         [HttpGet]
-        [AllowAnonymous]
         public IActionResult FindUsers()
         {
             var users = _userManager.Users.ToList();

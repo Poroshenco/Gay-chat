@@ -5,15 +5,17 @@
 
 @inject UserManager<ApplicationUser> Manager
 
+@using GayChat.Models.ITCHat
 @model List<ApplicationUser>
     
 @{
     var current = await Manager.GetUserAsync(User);
+    var buttonWidth = "120px";
 }    
 
 <form asp-action="FindUsers" asp-controller="Account" method="post">
-    <div style=" width: 245px; margin: auto; margin-top: 30px; overflow: hidden; height: 46px; box-shadow: 0px 0px 8px rgba(0,0,0,0.3)">
-        <input value="@ViewBag.Searched" name="data" placeholder="Find your friends" style="padding-left: 10px; float: left; width: 180px" />
+    <div style=" width: 300px; margin: auto; margin-top: 30px; overflow: hidden; height: 46px; box-shadow: 0px 0px 8px rgba(0,0,0,0.3)">
+        <input value="@ViewBag.Searched" name="data" placeholder="Find your friends" style="padding-left: 10px; float: left; width: 236px" />
         <button type="submit" class="btn" style="float: left; width: 54px; height: 45px; padding: 0px; padding-left: 3px; padding-top: 5px"><i class="material-icons">search</i></button>
     </div>
 </form>
@@ -33,16 +35,39 @@
                     @user.Email
                 </p>
                 <a href="#!" class="secondary-content waves-effect waves-light btn" style="width: 50px; padding: 0px"><i class="material-icons" style="margin-left: 5px">send</i></a>
-
-                <a onclick="InviteFriend('@user.Id')" class="secondary-content waves-effect waves-light btn" style="margin-right: 70px">@current.GetStatusForFriendId(user.Id)</a>
                 
+                @{
+                    var status = current.GetStatusForFriendId(user.Id);
+
+                    if(status == FriendStatus.None) { 
+                        <a onclick="InviteFriend('@user.Id')" class="secondary-content waves-effect waves-light btn" style="margin-right: 70px; width: @buttonWidth">Invite</a>
+                    }
+                    else if (status == FriendStatus.Accepted)
+                    {
+                        <a href="/Account/Contacts" class="secondary-content waves-effect waves-light btn" style="margin-right: 70px; background: #ff9800; width: @buttonWidth ">Friend</a>
+                    }
+                    else if (status == FriendStatus.Invited)
+                    {
+                        <a class="secondary-content disabled waves-effect waves-light btn" style="margin-right: 70px; background: transparent; color: black; width: @buttonWidth">Invited</a>
+                    }
+                    else
+                    {
+                        <a onclick="Accept('@user.Id')" class="secondary-content waves-effect waves-light btn" style="margin-right: 70px; background: #00e676; width: @buttonWidth  ">Accept</a>
+                    }
+
+                }
+
             </li>
-        }
+                    }
 
         <form asp-action="Invite" asp-controller="Account" method="post" id="InvitationForm">
 
         </form>
         
+        <form asp-action="AcceptInvite" asp-controller="Account" method="post" id="AcceptForm">
+            
+        </form>
+
     </ul>
 </div>
 
@@ -55,6 +80,19 @@
 
         var input = document.createElement("input");
         input.name = "friendId";
+        input.value = friendId;
+        input.type = "hidden";
+
+        form.appendChild(input);
+
+        form.submit();
+    }
+
+    function Accept(friendId) {
+        var form = document.getElementById('AcceptForm');
+
+        var input = document.createElement("input");
+        input.name = "subscriberId";
         input.value = friendId;
         input.type = "hidden";
 
