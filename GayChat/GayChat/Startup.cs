@@ -23,7 +23,7 @@ namespace GayChat
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true);
-
+            env.EnvironmentName = "Development";
             if (env.IsDevelopment())
             {
                 // For more details on using the user secret store see https://go.microsoft.com/fwlink/?LinkID=532709

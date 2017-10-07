@@ -19,10 +19,17 @@ namespace GayChat.Models
 
         public string Friends_JSON
         {
-            get { return JsonConvert.SerializeObject(Friends); }
+            get
+            {
+                if (Friends == null)
+                    return null;
+                return JsonConvert.SerializeObject(Friends);
+            }
             set
             {
-                if (!string.IsNullOrEmpty(value)) { Friends = JsonConvert.DeserializeObject<List<Friend>>(value); }
+                if (string.IsNullOrEmpty(value))
+                    return;
+                Friends = JsonConvert.DeserializeObject<List<Friend>>(value);
             }
         }
 
