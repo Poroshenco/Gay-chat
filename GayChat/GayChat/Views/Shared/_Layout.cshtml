@@ -147,7 +147,18 @@
                 }
                 );
 
-                $('#mainIndex').css({ paddingBottom: screen.height - 15 });
+                @{ 
+                    var isMobile = Context.Request.IsMobile() ? 1 : 0;
+                }
+
+                var isMobile = @isMobile;
+
+                if (isMobile) {
+                    $('#mainIndex').css({ paddingBottom: screen.height - 56 });
+                }
+                else {
+                    $('#mainIndex').css({ paddingBottom: screen.height - 15 });
+                }
 
             });
         })(jQuery);

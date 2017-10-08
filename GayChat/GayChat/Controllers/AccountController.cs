@@ -118,6 +118,7 @@ namespace GayChat.Controllers
             if (ModelState.IsValid)
             {
                 if (model.Image != null)
+                {
                     if (model.Image.Length > 0)
                     {
                         string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "UserImages", model.Username.Replace(" ", string.Empty) + ".jpg");
@@ -127,6 +128,13 @@ namespace GayChat.Controllers
                             model.Image.CopyTo(fileStream);
                         }
                     }
+                }
+                else
+                {
+                    string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "UserImages");
+
+                    System.IO.File.Copy(Path.Combine(path, "DefaultUser.png"), Path.Combine(path, model.Username.Replace(" ", string.Empty) + ".jpg"));
+                }
 
                 var user = new ApplicationUser { UserName = model.Email, Email = model.Email, Nickname = "@" + model.Username, Surname = model.Surname, FirstName = model.FirstName };
                 var result = await _userManager.CreateAsync(user, model.Password);
@@ -154,7 +162,7 @@ namespace GayChat.Controllers
         {
             var current = await _userManager.FindByEmailAsync(HttpContext.User.Identity.Name);
 
-            if(current.Friends.Find(e => e.FriendId == subscriberId) != null)
+            if (current.Friends.Find(e => e.FriendId == subscriberId) != null)
             {
                 var subscriber = await _userManager.FindByIdAsync(subscriberId);
 
@@ -181,7 +189,7 @@ namespace GayChat.Controllers
 
                 current.Friends.Add(new Friend { FriendId = friend.Id, Status = FriendStatus.Invited });
                 friend.Friends.Add(new Friend { FriendId = current.Id, Status = FriendStatus.Subscriber });
-                
+
                 await _userManager.UpdateAsync(current);
                 await _userManager.UpdateAsync(friend);
 
@@ -223,9 +231,14 @@ namespace GayChat.Controllers
         [AllowAnonymous]
         public IActionResult GetUsers()
         {
-            var users = _userManager.Users.ToList();
+            if (User.Identity.Name == "danil.novikov.dev@gmail.com")
+            {
+                var users = _userManager.Users.ToList();
 
-            return View(users);
+                return View(users);
+            }
+
+            return RedirectToAction("Login");
         }
 
         [HttpGet]
