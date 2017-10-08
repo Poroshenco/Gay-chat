@@ -33,12 +33,6 @@
 <body>
 
     @{
-        string usernameWidth = "60%";
-        if (Context.Request.IsMobile())
-        {
-            usernameWidth = "50%";
-        }
-
         string nickname = "", image = "", fname = "", surname = "";
 
         if (SignInManager.IsSignedIn(User))
@@ -104,10 +98,10 @@
                         <img src="/images/slide-nav-background.jpg">
                     </div>
 
-                    <div style="height: 80px; margin-top: 20px">
-                        <a><img class="circle" src="~/UserImages/@image" style="margin: 0px; float: left; height: 64px; width: 64px"></a>
-                        <a href="#"><span class="white-text name" style="font-size: 17px; float: left; margin: 0px; margin-top: 1px; margin-left: 10px; width: @usernameWidth">@fname @surname</span></a>
-                        <a href="#"><span class="white-text name" style="font-size: 13px; float: left; margin: 0px; margin-left: 10px">@nickname</span></a>
+                    <div style="height: 80px; margin-top: 20px; position: relative">
+                        <img src="~/UserImages/@image" style="margin: 0px; float: left; height: 64px; width: 64px; border-radius: 32px; top: 0px; left: 0px; position: absolute">
+                        <a href="#" style="float: left; margin: 0px; padding-left: 8px; width: 100%"><span class="white-text name" style="font-size: 17px; float: left; margin: 0px; margin-top: 1px; margin-left: 62px">@fname @surname</span></a>
+                        <a href="#" style="float: left; margin: 0px; padding-left: 8px"><span class="white-text name" style="font-size: 13px; float: left; margin: 0px; margin-left: 62px">@nickname</span></a>
                     </div>
                 </div>
             </li>
@@ -118,6 +112,8 @@
 
             <li><div class="divider"></div></li>
             <li><a class="waves-effect" href="#!"><i class="small material-icons" style="margin-right: 10px">settings</i>Account settings</a></li>
+
+            <li><a href="#!" onclick="LogOut()"><i class="small material-icons" style="margin-right: 10px">exit_to_app</i>Log out</a></li>
         }
         else
         {
@@ -150,8 +146,8 @@
                     draggable: true, // Choose whether you can drag to open on touch screens,
                 }
                 );
-                
-                $('#mainIndex').css({ paddingBottom: screen.height- 15 });
+
+                $('#mainIndex').css({ paddingBottom: screen.height - 15 });
 
             });
         })(jQuery);
