@@ -1,26 +1,49 @@
-﻿@{
+﻿@using GayChat.Extensions
+@{
     ViewData["Title"] = "Home Page";
 }
 
+@inject SignInManager<ApplicationUser> SignInManager
 
-<div style="position: relative; width: 100%; padding-bottom: 47.7%">
+
+<div id="mainIndex" style="position: relative; width: 100%;">
     
-    <img src="~/images/Tropical_Index.jpg" style="position: absolute; top: 0px; left: 0px; width: 100%; height: 100%; filter: blur(0px)"/>
+    @if (SignInManager.IsSignedIn(User))
+    {
+        <img src="~/images/Authorized_Index.jpg" style="position: absolute; top: 0px; left: 0px; width: 100%; height: 100%; filter: blur(0px)"/>
+    }
+    else
+    {
+        <img src="~/images/Tropical_Index.jpg" style="position: absolute; top: 0px; left: 0px; width: 100%; height: 100%; filter: blur(0px)" />
+    }
 
-    <div class="inner" style="position: absolute; width: 800px; height: 50px; top: 310px; text-align: center">
+    <div class="inner" style="position: absolute; width: 800px; height: 50px; margin-top: 17%; text-align: center">
         <h2 style="color: white; border-top: 1px solid white;  border-bottom: 1px solid white; letter-spacing: 4px; width: 320px; margin: auto"> 
             GAY CHAT
         </h2>
 
         <h4 style="color: white; margin-bottom: 15px; font-family: bold italic">A new way of GAY chating</h4>
+        
+        @if (SignInManager.IsSignedIn(User))
+        {
+            <div style="width: 420px; height: 60px; margin: auto;">
 
-        <div style="width: 370px; height: 60px; margin: auto;">
+                <a class="waves-effect waves-light btn btn-large" href="/Account/FindUsers" style="float: left; width: 180px; background-color: transparent; border: 1px solid white">New Friends </a>
 
-            <a class="waves-effect waves-light btn btn-large" href="/Account/Login" style="float: left; width: 150px; background-color: transparent; border: 1px solid white">Sign in </a>
+                <a class="waves-effect waves-light btn btn-large" href="/Account/Contacts" style="float: right; width: 180px; background-color: transparent; border: 1px solid white">Contacts</a>
 
-            <a class="waves-effect waves-light btn btn-large" href="/Account/Register" style="float: right; width: 150px; background-color: transparent; border: 1px solid white">Sign up</a>
+            </div>
+        }
+        else
+        {
+            <div style="width: 370px; height: 60px; margin: auto;">
 
-        </div>
+                <a class="waves-effect waves-light btn btn-large" href="/Account/Login" style="float: left; width: 150px; background-color: transparent; border: 1px solid white">Sign in </a>
+
+                <a class="waves-effect waves-light btn btn-large" href="/Account/Register" style="float: right; width: 150px; background-color: transparent; border: 1px solid white">Sign up</a>
+
+            </div>
+        }
 
     </div>
 
