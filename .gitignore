@@ -228,3 +228,5 @@ GayChat/GayChat/Migrations/ApplicationDbContextModelSnapshot.cs
 GayChat/GayChat/Migrations/20171006183926_init.Designer.cs
 GayChat/GayChat/Migrations/20171006183926_init.cs
 GayChat/GayChat/Controllers/AccountController.cs
+GayChat/GayChat/Migrations/20171008141519_gay.Designer.cs
+GayChat/GayChat/Migrations/20171008141519_gay.cs
