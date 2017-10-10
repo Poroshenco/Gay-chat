@@ -5,13 +5,14 @@
 
 @inject UserManager<ApplicationUser> Manager
 
+@using GayChat.Extensions
 @using GayChat.Models.ITCHat
 @model List<ApplicationUser>
-    
+
 @{
     var current = await Manager.GetUserAsync(User);
     var buttonWidth = "120px";
-}    
+}
 
 <form asp-action="FindUsers" asp-controller="Account" method="post">
     <div style=" width: 300px; margin: auto; margin-top: 30px; overflow: hidden; height: 46px; box-shadow: 0px 0px 8px rgba(0,0,0,0.3)">
@@ -23,53 +24,115 @@
 <div class="container" style="margin-top: 30px; box-shadow: 0px 5px 15px rgba(0,0,0,0.5)">
 
     <ul class="collection">
-        @foreach (var user in Model)
+        @if (!Context.Request.IsMobile())
+        {
+            foreach (var user in Model)
             {
                 string image = user.Nickname.Substring(1).Replace(" ", string.Empty) + ".jpg";
 
-            <li class="collection-item avatar" style="background-color: white;">
-                <img class="materialboxed circle" src="~/UserImages/@image" style="border: 2px solid #03a9f4; width: 70px; height: 70px">
-                <span class="title" style="margin-left: 20px;">@user.FirstName @user.Surname</span>
-                <p style="margin-left: 20px; font-size: 12px">
-                    @user.Nickname <br>
-                    @user.Email
-                </p>
-                <a href="#!" class="secondary-content waves-effect waves-light btn" style="width: 50px; padding: 0px"><i class="material-icons" style="margin-left: 5px">send</i></a>
-                
-                @{
-                    var status = current.GetStatusForFriendId(user.Id);
+                <li class="collection-item avatar" style="background-color: white;">
+                    <img class="materialboxed circle" src="~/UserImages/@image" style="border: 2px solid #03a9f4; width: 70px; height: 70px">
+                    <span class="title" style="margin-left: 20px;">@user.FirstName @user.Surname</span>
+                    <p style="margin-left: 20px; font-size: 12px">
+                        @user.Nickname <br>
+                        @user.Email
+                    </p>
+                    <a href="#!" class="secondary-content waves-effect waves-light btn" style="width: 50px; padding: 0px"><i class="material-icons" style="margin-left: 5px">send</i></a>
 
-                    if(status == FriendStatus.None) { 
-                        <a onclick="InviteFriend('@user.Id')" class="secondary-content waves-effect waves-light btn" style="margin-right: 70px; width: @buttonWidth">Invite</a>
-                    }
-                    else if (status == FriendStatus.Accepted)
-                    {
-                        <a href="/Account/Contacts" class="secondary-content waves-effect waves-light btn" style="margin-right: 70px; background: #ff9800; width: @buttonWidth ">Friend</a>
-                    }
-                    else if (status == FriendStatus.Invited)
-                    {
-                        <a class="secondary-content disabled waves-effect waves-light btn" style="margin-right: 70px; background: transparent; color: black; width: @buttonWidth">Invited</a>
-                    }
-                    else
-                    {
-                        <a onclick="Accept('@user.Id')" class="secondary-content waves-effect waves-light btn" style="margin-right: 70px; background: #00e676; width: @buttonWidth  ">Accept</a>
-                    }
+                    @{
+                        var status = current.GetStatusForFriendId(user.Id);
 
-                }
+                        if (status == FriendStatus.None)
+                        {
+                            <a onclick="InviteFriend('@user.Id')" class="secondary-content waves-effect waves-light btn" style="margin-right: 70px; width: @buttonWidth">Invite</a>
+                        }
+                        else if (status == FriendStatus.Accepted)
+                        {
+                            <a href="/Account/Contacts" class="secondary-content waves-effect waves-light btn" style="margin-right: 70px; background: #ff9800; width: @buttonWidth">Friend</a>
+                        }
+                        else if (status == FriendStatus.Invited)
+                        {
+                            <a class="secondary-content disabled waves-effect waves-light btn" style="margin-right: 70px; background: transparent; color: black; width: @buttonWidth">Invited</a>
+                        }
+                        else
+                        {
+                            <a onclick="Accept('@user.Id')" class="secondary-content waves-effect waves-light btn" style="margin-right: 70px; background: #00e676; width: @buttonWidth">Accept</a>
+                        }
 
-            </li>
                     }
 
-        <form asp-action="Invite" asp-controller="Account" method="post" id="InvitationForm">
+                </li>
+            }
 
-        </form>
-        
-        <form asp-action="AcceptInvite" asp-controller="Account" method="post" id="AcceptForm">
-            
-        </form>
+        }
+        else
+        {
+            foreach (var user in Model)
+            {
+                string image = user.Nickname.Substring(1).Replace(" ", string.Empty) + ".jpg";
+
+                <li class="collection-item avatar" style="background-color: white; padding: 0px; height: 147px; border-bottom: 1px solid darkgrey">
+                    <div style="width: 100%; float: left; height: 90px">
+                        <img class="materialboxed circle" src="~/UserImages/@image" style="border: 1px solid #03a9f4; width: 62px; height: 62px; margin-top: 15px">
+                        
+                        <div style="margin-left: 87px; margin-top: 15px">
+                            <span class="title" style="">@user.FirstName @user.Surname</span>
+                            <p style="font-size: 12px">
+                                @user.Nickname <br>
+                                @user.Email
+                            </p>
+                        </div>
+                    </div>
+                      
+                    <div style="width: 100%; background-color: grey; float: left; height: 1px; margin-bottom: 6px"></div>
+
+                    <div style="float: left; height: 50px; width: 100%;">
+                    
+                        <a href="#!" class="waves-effect waves-light btn" style="width: 50px; padding: 0px; float: right; margin-right: 20px"><i class="material-icons" style="margin-left: 5px">send</i></a>
+                    
+                        @{
+                            var status = current.GetStatusForFriendId(user.Id);
+
+                            if (status == FriendStatus.None)
+                            {
+                                <a onclick="InviteFriend('@user.Id')" class="waves-effect waves-light btn bud" style="width: @buttonWidth">Invite</a>
+                            }
+                            else if (status == FriendStatus.Accepted)
+                            {
+                                <a href="/Account/Contacts" class="waves-effect waves-light btn bud" style="background: #ff9800; width: @buttonWidth">Friend</a>
+                            }
+                            else if (status == FriendStatus.Invited)
+                            {
+                                <a class="disabled waves-effect waves-light btn bud" style="background: transparent; color: black; width: @buttonWidth">Invited</a>
+                            }
+                            else
+                            {
+                                <a onclick="Accept('@user.Id')" class="waves-effect waves-light btn bud" style="background: #00e676; width: @buttonWidth">Accept</a>
+                            }
+
+                        }
+                                        
+                    </div>
+
+                </li>
+            }
+        }
+
+        <form asp-action="Invite" asp-controller="Account" method="post" id="InvitationForm"></form>
+
+        <form asp-action="AcceptInvite" asp-controller="Account" method="post" id="AcceptForm"></form>
 
     </ul>
 </div>
+    
+<style>
+    
+    .bud {
+        float: left;
+        margin-left: 20px;
+    }
+
+</style>
 
 <script>
 

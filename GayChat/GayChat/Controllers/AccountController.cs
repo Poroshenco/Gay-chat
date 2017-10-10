@@ -244,7 +244,18 @@ namespace GayChat.Controllers
         [HttpGet]
         public async Task<IActionResult> DeleteUser(string id)
         {
-            await _userManager.DeleteAsync(await _userManager.FindByIdAsync(id));
+            var removed = await _userManager.FindByIdAsync(id);
+
+            foreach (var friend in removed.Friends)
+            {
+                var friend_ = await _userManager.FindByIdAsync(friend.FriendId);
+
+                friend_.Friends.RemoveAll(e => e.FriendId == id);
+
+                await _userManager.UpdateAsync(friend_);
+            }
+
+            await _userManager.DeleteAsync(removed);
 
             return RedirectToAction("GetUsers");
         }
