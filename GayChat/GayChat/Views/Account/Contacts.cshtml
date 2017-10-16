@@ -186,16 +186,14 @@
 
                                     @if (!Context.Request.IsMobile())
                                     {
-                                        <a href="#!" class="secondary-content waves-effect waves-light btn" style="width: 120px; padding: 0px">
-                                            <p style="float: left; margin-left: 28px">CHAT</p>
-
-                                            <i class="material-icons" style="float: left; margin-left: 7px">send</i>
+                                        <a href="#!" class="secondary-content waves-effect waves-light btn" style="width: 120px; background-color: #00e676; padding: 0px">
+                                            <p style="float: left; margin-left: 28px">Accept</p>
                                         </a>
                                     }
                                     else
                                     {
-                                        <a href="#!" class="secondary-content waves-effect waves-light btn" style="padding: 0px; width: 50px;">
-                                            <i class="material-icons" style="margin-left: 4px">send</i>
+                                        <a href="#!"  onclick="Accept('@user.Id')" class="secondary-content waves-effect waves-light btn" style="padding: 0px; background-color: #00e676; width: 50px;">
+                                            <i class="material-icons">add</i>
                                         </a>
 
                                     }
@@ -219,19 +217,19 @@
 
 </div>
 
+<form asp-action="AcceptInvite" asp-controller="Account" method="post" id="AcceptForm"></form>
 
+<script>
+    function Accept(friendId) {
+        var form = document.getElementById('AcceptForm');
 
+        var input = document.createElement("input");
+        input.name = "subscriberId";
+        input.value = friendId;
+        input.type = "hidden";
 
-@*@{
-        var user = await UserManager.GetUserAsync(User);
+        form.appendChild(input);
 
-
-        if (user.Friends.Count > 0)
-        {
-            foreach (var item in user.Friends)
-            {
-                <h3>@item.FriendId -- @item.Status</h3>
-            }
-        }
-
-    }*@
+        form.submit();
+    }
+</script>

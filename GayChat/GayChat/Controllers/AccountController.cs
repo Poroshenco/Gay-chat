@@ -96,6 +96,12 @@ namespace GayChat.Controllers
             return View(model);
         }
 
+        [HttpGet]
+        public IActionResult AccountSettings()
+        {
+            return View();
+        }
+
         //
         // GET: /Account/Register
         [HttpGet]
@@ -155,6 +161,27 @@ namespace GayChat.Controllers
 
             // If we got this far, something failed, redisplay form
             return View(model);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> ChangeAccountAvatar(IFormFile avatar)
+        {
+            if (avatar != null)
+            {
+                var current = await _userManager.FindByEmailAsync(HttpContext.User.Identity.Name);
+
+                string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "UserImages", current.Nickname.Substring(1) + ".jpg");
+
+                System.IO.File.Delete(path);
+
+                using (var fileStream = new FileStream(path, FileMode.Create))
+                {
+                    avatar.CopyTo(fileStream);
+                }
+
+            }
+
+            return RedirectToAction("AccountSettings");
         }
 
         [HttpPost]

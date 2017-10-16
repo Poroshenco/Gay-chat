@@ -55,7 +55,7 @@
                 <ul class="left hide-on-med-and-down" style="margin-left: 100px">
                     @*<li><a href="/Account/GetUsers">Admin</a></li>*@
                     <li><a href="/Account/FindUsers">Find</a></li>
-                    <li><a href="/Home/About">About</a></li>
+                    <li><a href="/Account/Contacts">Contacts</a></li>
                 </ul>
 
 
@@ -65,7 +65,7 @@
                     <form asp-area="" asp-controller="Account" asp-action="Logout" method="post" id="logoutForm">
                         <ul class="right hide-on-med-and-down" style="margin-right: 150px;">
 
-                            <li><a>@fname @surname <img class="valign-wrapper" src="~/UserImages/@image" style="width: 50px; height: 50px; float: right; border-radius: 25px; margin-top: 7px; margin-left: 6px; border: 1px solid white" /></a></li>
+                            <li><a href="/Account/AccountSettings">@fname @surname <img class="valign-wrapper" src="~/UserImages/@image" style="width: 50px; height: 50px; float: right; border-radius: 25px; margin-top: 7px; margin-left: 6px; border: 1px solid white" /></a></li>
                             <li><a href="#" onclick="LogOut()">Log out</a></li>
 
                         </ul>
@@ -111,7 +111,7 @@
             <li><a class="waves-effect" href="/Account/FindUsers"><i class="small material-icons" style="margin-right: 10px">search</i>New Friends</a></li>
 
             <li><div class="divider"></div></li>
-            <li><a class="waves-effect" href="#!"><i class="small material-icons" style="margin-right: 10px">settings</i>Account settings</a></li>
+            <li><a class="waves-effect" href="/Account/AccountSettings"><i class="small material-icons" style="margin-right: 10px">settings</i>Account settings</a></li>
 
             <li><a href="#!" onclick="LogOut()"><i class="small material-icons" style="margin-right: 10px">exit_to_app</i>Log out</a></li>
         }
