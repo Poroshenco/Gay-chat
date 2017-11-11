@@ -18,6 +18,7 @@
 
     <script src="~/lib/jquery/dist/jquery.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+    <script src="https://unpkg.com/vue"></script>
 
     <environment names="Development">
         <link rel="stylesheet" href="~/css/site.css" />
@@ -30,10 +31,21 @@
     </environment>
     @Html.Raw(JavaScriptSnippet.FullScript)
 </head>
-<body>
+<body style="background-color: #fafafa">
 
     @{
         string nickname = "", image = "", fname = "", surname = "";
+
+        var url = Context.Request.Path.ToString();
+        var isUserChat = false;
+
+        if (url.Length == 17)
+        {
+            if (url.Substring(9) == "UserChat")
+            {
+                isUserChat = true;
+            }
+        }
 
         if (SignInManager.IsSignedIn(User))
         {
@@ -46,87 +58,143 @@
         }
     }
 
-    <div class="navbar-fixed">
-        <nav>
-            <div class="nav-wrapper">
-                <a data-activates="slide-out" class="button-collapse brand-left center" style="display: block; cursor: pointer"><i class="material-icons">menu</i></a>
-                <a href="/Home/Index" class="brand-logo center" style="letter-spacing: 2px">Gay Chat</a>
+    <div id="main">
+        <div class="navbar-fixed">
+            <nav>
+                <div class="nav-wrapper">
+                    <a data-activates="slide-out" class="button-collapse menu-left" style="display: block; cursor: pointer"><i class="material-icons">menu</i></a>
 
-                <ul class="left hide-on-med-and-down" style="margin-left: 100px">
-                    @*<li><a href="/Account/GetUsers">Admin</a></li>*@
-                    <li><a href="/Account/FindUsers">Find</a></li>
-                    <li><a href="/Account/Contacts">Contacts</a></li>
-                </ul>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        @*<p id="myFullName" style="display: none">@(fname + surname)</p>
+                        <p id="myNickname" style="display: none">@nickname</p>*@
+
+                        <a data-activates="slide-chats" class="button-collapse menu-right right" style="display: block; cursor: pointer"><i class="material-icons">send</i></a>
+                    }
+
+                    <a href="/Home/Index" class="brand-logo center" style="letter-spacing: 2px">Gay Chat</a>
 
 
+                    @if (SignInManager.IsSignedIn(User))
+                    {
+                        <ul class="left hide-on-med-and-down" style="margin-left: 100px">
+                            @*<li><a href="/Account/GetUsers">Admin</a></li>*@
+                            <li><a href="/Account/FindUsers">Find</a></li>
+                            <li><a href="/Account/Contacts">Contacts<span class="new badge" style="background: white; color: #0091ea ">{{amountoffriends}}</span></a></li>
+                        </ul>
 
-                @if (SignInManager.IsSignedIn(User))
-                {
-                    <form asp-area="" asp-controller="Account" asp-action="Logout" method="post" id="logoutForm">
+                        <form asp-area="" asp-controller="Account" asp-action="Logout" method="post" id="logoutForm">
+                            <ul class="right hide-on-med-and-down" style="margin-right: 100px;">
+
+                                <li><a href="/Account/AccountSettings">@fname @surname <img class="valign-wrapper" src="~/UserImages/@image" style="width: 50px; height: 50px; float: right; border-radius: 25px; margin-top: 7px; margin-left: 6px; border: 1px solid white" /></a></li>
+                                <li><a href="#" onclick="LogOut()">Log out</a></li>
+
+                            </ul>
+                        </form>
+                    }
+                    else
+                    {
                         <ul class="right hide-on-med-and-down" style="margin-right: 150px;">
 
-                            <li><a href="/Account/AccountSettings">@fname @surname <img class="valign-wrapper" src="~/UserImages/@image" style="width: 50px; height: 50px; float: right; border-radius: 25px; margin-top: 7px; margin-left: 6px; border: 1px solid white" /></a></li>
-                            <li><a href="#" onclick="LogOut()">Log out</a></li>
+                            <li><a href="/Account/Login">Login</a></li>
+                            <li><a href="/Account/Register">Sign Up</a></li>
 
                         </ul>
-                    </form>
-                }
-                else
-                {
-                    <ul class="right hide-on-med-and-down" style="margin-right: 150px;">
-
-                        <li><a href="/Account/Login">Login</a></li>
-                        <li><a href="/Account/Register">Sign Up</a></li>
-
-                    </ul>
-                }
+                    }
 
 
 
-            </div>
-        </nav>
+                </div>
+            </nav>
+        </div>
+
+        <ul id="slide-out" class="side-nav">
+
+            @if (SignInManager.IsSignedIn(User))
+            {
+                <li>
+                    <div class="user-view" style="padding: 12px">
+
+                        <div class="background">
+                            <img src="/images/slide-nav-background.jpg">
+                        </div>
+
+                        <div style="height: 80px; margin-top: 20px; position: relative">
+                            <img src="~/UserImages/@image" style="margin: 0px; float: left; height: 64px; width: 64px; border-radius: 32px; top: 0px; left: 0px; position: absolute">
+                            <a href="#" style="float: left; margin: 0px; padding-left: 8px; width: 100%"><span class="white-text name" style="font-size: 17px; float: left; margin: 0px; margin-top: 1px; margin-left: 62px">@fname @surname</span></a>
+                            <a href="#" style="float: left; margin: 0px; padding-left: 8px"><span class="white-text name" style="font-size: 13px; float: left; margin: 0px; margin-left: 62px">@nickname</span></a>
+                        </div>
+                    </div>
+                </li>
+                <li><a class="subheader">Communication</a></li>
+                <li><a class="waves-effect" href="/Account/Contacts"><i class="small material-icons" style="margin-right: 10px">supervisor_account</i>Contacts <span class="new badge">{{amountoffriends}}</span></a></li>
+                <li><a class="waves-effect" href="#!"><i class="small material-icons" style="margin-right: 10px">sms</i>Chats</a></li>
+                <li><a class="waves-effect" href="/Account/FindUsers"><i class="small material-icons" style="margin-right: 10px">search</i>New Friends</a></li>
+
+                <li><div class="divider"></div></li>
+                <li><a class="waves-effect" href="/Account/AccountSettings"><i class="small material-icons" style="margin-right: 10px">settings</i>Account settings</a></li>
+
+                <li><a href="#!" onclick="LogOut()"><i class="small material-icons" style="margin-right: 10px">exit_to_app</i>Log out</a></li>
+            }
+            else
+            {
+                <li><a class="subheader">Account</a></li>
+                <li><a class="waves-effect" href="/Account/Register"><i class="small material-icons" style="margin-right: 10px">assignment_ind</i>Sign Up</a></li>
+                <li><a class="waves-effect" href="/Account/Login"><i class="small material-icons" style="margin-right: 10px">account_circle</i>Sign In</a></li>
+            }
+        </ul>
+
+
+        @if (User.Identity.IsAuthenticated)
+        {
+            <ul id="slide-chats" class="side-nav">
+
+                <li>
+                    <div class="user-view" style="padding-top: 12px; padding-bottom: 12px; margin: 0px">
+
+                        <div class="background" style="background-color: #00b0ff ">
+
+                        </div>
+
+                        <div style="position: relative">
+                            <p style="color: white; font-size: 26px; margin: 0px">Chats</p>
+                        </div>
+                    </div>
+                </li>
+
+                <li v-for="chat in allchats" style="cursor: pointer">
+                    <a class="waves-effect" v-on:click="goToChat(chat.UserId)" style="margin: 0px; height: 75px; padding: 0px">
+                        <div style="width: 100%; padding: 12px; overflow: hidden">
+                            <img class="circle" :src="'/UserImages/' + chat.UserNickname.substring(1) + '.jpg'" style="width: 50px; height: 50px; float: left" />
+
+                            <p style="float: left; margin: 0px; margin-left: 6px; font-size: 16px; margin-top: 2px">{{chat.UserFullname}}</p>
+                        </div>
+                        <hr style="margin: 0px" />
+                    </a>
+                </li>
+
+            </ul>
+        }
+
+        @if (isUserChat)
+        {
+            @RenderBody()
+        }
     </div>
 
-    <ul id="slide-out" class="side-nav">
-
-        @if (SignInManager.IsSignedIn(User))
-        {
-            <li>
-                <div class="user-view" style="padding: 12px">
-
-                    <div class="background">
-                        <img src="/images/slide-nav-background.jpg">
-                    </div>
-
-                    <div style="height: 80px; margin-top: 20px; position: relative">
-                        <img src="~/UserImages/@image" style="margin: 0px; float: left; height: 64px; width: 64px; border-radius: 32px; top: 0px; left: 0px; position: absolute">
-                        <a href="#" style="float: left; margin: 0px; padding-left: 8px; width: 100%"><span class="white-text name" style="font-size: 17px; float: left; margin: 0px; margin-top: 1px; margin-left: 62px">@fname @surname</span></a>
-                        <a href="#" style="float: left; margin: 0px; padding-left: 8px"><span class="white-text name" style="font-size: 13px; float: left; margin: 0px; margin-left: 62px">@nickname</span></a>
-                    </div>
-                </div>
-            </li>
-            <li><a class="subheader">Communication</a></li>
-            <li><a class="waves-effect" href="/Account/Contacts"><i class="small material-icons" style="margin-right: 10px">supervisor_account</i>Contacts</a></li>
-            <li><a class="waves-effect" href="#!"><i class="small material-icons" style="margin-right: 10px">sms</i>Chats</a></li>
-            <li><a class="waves-effect" href="/Account/FindUsers"><i class="small material-icons" style="margin-right: 10px">search</i>New Friends</a></li>
-
-            <li><div class="divider"></div></li>
-            <li><a class="waves-effect" href="/Account/AccountSettings"><i class="small material-icons" style="margin-right: 10px">settings</i>Account settings</a></li>
-
-            <li><a href="#!" onclick="LogOut()"><i class="small material-icons" style="margin-right: 10px">exit_to_app</i>Log out</a></li>
-        }
-        else
-        {
-            <li><a class="subheader">Account</a></li>
-            <li><a class="waves-effect" href="/Account/Register"><i class="small material-icons" style="margin-right: 10px">assignment_ind</i>Sign Up</a></li>
-            <li><a class="waves-effect" href="/Account/Login"><i class="small material-icons" style="margin-right: 10px">account_circle</i>Sign In</a></li>
-        }
-    </ul>
+    @if (!isUserChat)
+    {
+        @RenderBody()
+    }
 
 
-    @RenderBody()
+
 
     <script>
+
+
+
+
 
         function LogOut() {
             $("#logoutForm").submit();
@@ -135,19 +203,30 @@
         (function ($) {
             $(function () {
 
+                setTimeout(function() {
+                    $('.materialboxed').materialbox();
+                },
+                4000);
+
                 $('ul.tabs').tabs();
 
-                $('.materialboxed').materialbox();
-
-                $('.button-collapse').sideNav({
+                $('.menu-left').sideNav({
                     menuWidth: 300, // Default is 300
                     edge: 'left', // Choose the horizontal origin
                     closeOnClick: true, // Closes side-nav on <a> clicks, useful for Angular/Meteor
-                    draggable: true, // Choose whether you can drag to open on touch screens,
+                    draggable: false, // Choose whether you can drag to open on touch screens,
                 }
                 );
 
-                @{ 
+                $('.menu-right').sideNav({
+                        menuWidth: 270, // Default is 300
+                        edge: 'left', // Choose the horizontal origin
+                        closeOnClick: true, // Closes side-nav on <a> clicks, useful for Angular/Meteor
+                        draggable: true, // Choose whether you can drag to open on touch screens,
+                    }
+                );
+
+                @{
                     var isMobile = Context.Request.IsMobile() ? 1 : 0;
                 }
 
@@ -165,10 +244,9 @@
 
     </script>
 
-
     <environment names="Development">
         <script src="~/lib/jquery/dist/jquery.js"></script>
-        <script src="~/js/site.js" asp-append-version="true"></script>
+        <script src="~/js/Site.js"></script>
     </environment>
     <environment names="Staging,Production">
         <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-2.2.0.min.js"
@@ -177,7 +255,6 @@
                 crossorigin="anonymous"
                 integrity="sha384-K+ctZQ+LL8q6tP7I94W+qzQsfRV2a+AfHIi9k8z8l9ggpc8X+Ytst4yBo/hH+8Fk">
         </script>
-        <script src="~/js/site.min.js" asp-append-version="true"></script>
     </environment>
 
 

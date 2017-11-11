@@ -1,3 +1,5 @@
+﻿
+
 
 @{
     ViewData["Title"] = "FindUsers";
@@ -10,158 +12,224 @@
 @model List<ApplicationUser>
 
 @{
-    var current = await Manager.GetUserAsync(User);
-    var buttonWidth = "120px";
+    var margintop = "30px";
+
+    var downloaderwidth = "50%";
+    var downloaderMargin = "250px";
+
+    if (Context.Request.IsMobile())
+    {
+        margintop = "10px";
+        downloaderMargin = "100px";
+        downloaderwidth = "80%";
+    }
 }
 
-<form asp-action="FindUsers" asp-controller="Account" method="post">
-    <div style=" width: 300px; margin: auto; margin-top: 30px; overflow: hidden; height: 46px; box-shadow: 0px 0px 8px rgba(0,0,0,0.3)">
-        <input value="@ViewBag.Searched" name="data" placeholder="Find your friends" style="padding-left: 10px; float: left; width: 236px" />
-        <button type="submit" class="btn" style="float: left; width: 54px; height: 45px; padding: 0px; padding-left: 3px; padding-top: 5px"><i class="material-icons">search</i></button>
+<div id="predownloader">
+    <div class="progress" style="width: @downloaderwidth; margin: auto; margin-top: @downloaderMargin">
+        <div class="indeterminate"></div>
     </div>
-</form>
-
-<div class="container" style="margin-top: 30px; box-shadow: 0px 5px 15px rgba(0,0,0,0.5)">
-
-    <ul class="collection">
-        @if (!Context.Request.IsMobile())
-        {
-            foreach (var user in Model)
-            {
-                string image = user.Nickname.Substring(1).Replace(" ", string.Empty) + ".jpg";
-
-                <li class="collection-item avatar" style="background-color: white;">
-                    <img class="materialboxed circle" src="~/UserImages/@image" style="border: 2px solid #03a9f4; width: 70px; height: 70px">
-                    <span class="title" style="margin-left: 20px;">@user.FirstName @user.Surname</span>
-                    <p style="margin-left: 20px; font-size: 12px">
-                        @user.Nickname <br>
-                        @user.Email
-                    </p>
-                    <a href="#!" class="secondary-content waves-effect waves-light btn" style="width: 50px; padding: 0px"><i class="material-icons" style="margin-left: 5px">send</i></a>
-
-                    @{
-                        var status = current.GetStatusForFriendId(user.Id);
-
-                        if (status == FriendStatus.None)
-                        {
-                            <a onclick="InviteFriend('@user.Id')" class="secondary-content waves-effect waves-light btn" style="margin-right: 70px; width: @buttonWidth">Invite</a>
-                        }
-                        else if (status == FriendStatus.Accepted)
-                        {
-                            <a href="/Account/Contacts" class="secondary-content waves-effect waves-light btn" style="margin-right: 70px; background: #ff9800; width: @buttonWidth">Friend</a>
-                        }
-                        else if (status == FriendStatus.Invited)
-                        {
-                            <a class="secondary-content disabled waves-effect waves-light btn" style="margin-right: 70px; background: transparent; color: black; width: @buttonWidth">Invited</a>
-                        }
-                        else
-                        {
-                            <a onclick="Accept('@user.Id')" class="secondary-content waves-effect waves-light btn" style="margin-right: 70px; background: #00e676; width: @buttonWidth">Accept</a>
-                        }
-
-                    }
-
-                </li>
-            }
-
-        }
-        else
-        {
-            foreach (var user in Model)
-            {
-                string image = user.Nickname.Substring(1).Replace(" ", string.Empty) + ".jpg";
-
-                <li class="collection-item avatar" style="background-color: white; padding: 0px; height: 147px; border-bottom: 1px solid darkgrey">
-                    <div style="width: 100%; float: left; height: 90px">
-                        <img class="materialboxed circle" src="~/UserImages/@image" style="border: 1px solid #03a9f4; width: 62px; height: 62px; margin-top: 15px">
-                        
-                        <div style="margin-left: 87px; margin-top: 15px">
-                            <span class="title" style="">@user.FirstName @user.Surname</span>
-                            <p style="font-size: 12px">
-                                @user.Nickname <br>
-                                @user.Email
-                            </p>
-                        </div>
-                    </div>
-                      
-                    <div style="width: 100%; background-color: grey; float: left; height: 1px; margin-bottom: 6px"></div>
-
-                    <div style="float: left; height: 50px; width: 100%;">
-                    
-                        <a href="#!" class="waves-effect waves-light btn" style="width: 50px; padding: 0px; float: right; margin-right: 20px"><i class="material-icons" style="margin-left: 5px">send</i></a>
-                    
-                        @{
-                            var status = current.GetStatusForFriendId(user.Id);
-
-                            if (status == FriendStatus.None)
-                            {
-                                <a onclick="InviteFriend('@user.Id')" class="waves-effect waves-light btn bud" style="width: @buttonWidth">Invite</a>
-                            }
-                            else if (status == FriendStatus.Accepted)
-                            {
-                                <a href="/Account/Contacts" class="waves-effect waves-light btn bud" style="background: #ff9800; width: @buttonWidth">Friend</a>
-                            }
-                            else if (status == FriendStatus.Invited)
-                            {
-                                <a class="disabled waves-effect waves-light btn bud" style="background: transparent; color: black; width: @buttonWidth">Invited</a>
-                            }
-                            else
-                            {
-                                <a onclick="Accept('@user.Id')" class="waves-effect waves-light btn bud" style="background: #00e676; width: @buttonWidth">Accept</a>
-                            }
-
-                        }
-                                        
-                    </div>
-
-                </li>
-            }
-        }
-
-        <form asp-action="Invite" asp-controller="Account" method="post" id="InvitationForm"></form>
-
-        <form asp-action="AcceptInvite" asp-controller="Account" method="post" id="AcceptForm"></form>
-
-    </ul>
 </div>
-    
-<style>
-    
-    .bud {
-        float: left;
-        margin-left: 20px;
-    }
 
-</style>
+<div id="app" style="opacity: 0">
+    
+    <div class="row" style="width: 300px; margin: auto; margin-top: @margintop;">
+        <div class="input-field col s12">
+            <i class="material-icons prefix" style="margin-top: 9px">search</i>
+            <input id="icon_prefix" v-model="find" type="text" style="margin-left: 32px;" class="validate">
+            <label for="icon_prefix" style="margin-left: 32px">Search</label>
+        </div>
+    </div>
+    
+    <div v-if="sortUsers.length > 0" class="container" style="margin-top: @margintop; box-shadow: 0px 2px 7px rgba(0, 0, 0, 0.4)">
+
+        <ul class="collection">
+            @if (!Context.Request.IsMobile())
+            {
+                //string image = user.Nickname.Substring(1).Replace(" ", string.Empty) + ".jpg";
+                
+                <li class="collection-item avatar" v-for="user in sortUsers" style="background-color: white; height: 90px">
+
+                    <img class="materialboxed circle" :src="'/UserImages/' + user.Nickname.substring(1) + '.jpg'" style="border: 2px solid #03a9f4; width: 70px; height: 70px; float: left;">
+
+                    <p style="margin-left: 20px; font-size: 14px; margin-top: 5px">
+
+                        <label style="color: black; font-size: 17px">{{user.FullName}}</label>
+                        <br>
+                        {{user.Nickname}}
+                    </p>
+
+                    <form asp-action="StartChat" asp-controller="Account" method="post">
+                        <input v-model="user.Id" type="hidden" name="userId"/>
+                        <button type="submit" class="secondary-content waves-effect waves-light btn" style="width: 50px; padding: 0px"><i class="material-icons" style="margin-left: 5px">send</i></button>
+                    </form>
+                    
+                    <a href="#!" v-on:click="buttonOnClick(user)" v-bind:style=" { backgroundColor: user.ButtonColor } " class="secondary-content waves-effect waves-light btn" style="margin-right: 70px;">{{user.ButtonText}}</a>
+
+                </li>
+            }
+            else
+            {
+                    <li v-for="user in sortUsers" class="collection-item avatar" style="background-color: white; padding: 0px; height: 147px; border-bottom: 1px solid darkgrey">
+                        <div style="width: 100%; float: left; height: 90px">
+                            <img class="materialboxed circle" :src="'/UserImages/' + user.Nickname.substring(1) + '.jpg'"  style="border: 1px solid #03a9f4; width: 62px; height: 62px; margin-top: 15px">
+
+                            <div style="margin-left: 87px; margin-top: 15px">
+                                <span class="title">{{user.FullName}}</span>
+                                <p style="font-size: 12px">
+                                    {{user.Nickname}}
+                                </p>
+                            </div>
+                        </div>
+
+                        <div style="width: 100%; background-color: grey; float: left; height: 1px; margin-bottom: 7px"></div>
+
+                        <div style="float: left; height: 50px; width: 100%;">
+
+                            <a href="#!" class="waves-effect waves-light btn" style="width: 50px; padding: 0px; float: right; margin-right: 20px"><i class="material-icons" style="margin-left: 5px">send</i></a>
+                            <a href="#!" class="waves-effect waves-light btn bud" style="width: 120px" v-on:click="buttonOnClick(user)" v-bind:style=" { backgroundColor: user.ButtonColor } ">{{user.ButtonText}}</a>
+
+                            @*@{
+                                var status = current.GetStatusForFriendId(user.Id);
+
+                                if (status == FriendStatus.None)
+                                {
+                                    <a onclick="InviteFriend('@user.Id')" class="waves-effect waves-light btn bud" style="width: @buttonWidth">Invite</a>
+                                }
+                                else if (status == FriendStatus.Accepted)
+                                {
+                                    <a href="/Account/Contacts" class="waves-effect waves-light btn bud" style="background: #ff9800; width: @buttonWidth">Friend</a>
+                                }
+                                else if (status == FriendStatus.Invited)
+                                {
+                                    <a class="disabled waves-effect waves-light btn bud" style="background: transparent; color: black; width: @buttonWidth">Invited</a>
+                                }
+                                else
+                                {
+                                    <a onclick="Accept('@user.Id')" class="waves-effect waves-light btn bud" style="background: #00e676; width: @buttonWidth">Accept</a>
+                                }
+
+                            }*@
+
+                        </div>
+
+                    </li>
+            }
+
+        </ul>
+    </div>
+    
+    <div v-else style="margin: auto; width: 300px; height: 70px; margin-top: @margintop ; box-shadow: 0px 2px 6px rgba(0,0,0,0.25)">
+        <p style="text-align: center; font-size: 23px; padding-top: 16px">No one found</p>
+    </div>
+
+</div>
 
 <script>
 
 
-    function InviteFriend(friendId) {
+    var app = new Vue({
+        el: '#app',
+        data: {
+            users: {},
+            find: "",
+            show: false,
+        },
 
-        var form = document.getElementById('InvitationForm');
+        methods: {
 
-        var input = document.createElement("input");
-        input.name = "friendId";
-        input.value = friendId;
-        input.type = "hidden";
+            updateUsers: function() {
+                $.ajax({
+                    url: '/Account/UsersString',
+                    type: 'GET',
+                    success: function (data) {
+                        
+                        this.users = JSON.parse(data);;
 
-        form.appendChild(input);
+                    }.bind(this)
+                });
+            },
 
-        form.submit();
-    }
+            buttonOnClick: function(user) {
+                
+                if (user.ButtonText === "Invite") {
+                    user.ButtonText = "Invited";
+                    user.ButtonColor = "#757575";
 
-    function Accept(friendId) {
-        var form = document.getElementById('AcceptForm');
+                    this.inviteFriend(user.Id);
+                    
+                }
 
-        var input = document.createElement("input");
-        input.name = "subscriberId";
-        input.value = friendId;
-        input.type = "hidden";
+                if (user.ButtonText === "Subscriber") {
+                    user.ButtonText = "Friend";
+                    user.ButtonColor = "#ff9800";
 
-        form.appendChild(input);
+                    this.acceptInvite(user.Id);
+                }
 
-        form.submit();
-    }
+            },
 
+            acceptInvite: function(id) {
+                $.ajax({
+                    url: '/Account/AcceptInvite',
+                    type: 'POST',
+                    data: {
+                        subscriberId: id  
+                    },
+                });              
+            },
+
+            inviteFriend: function (id) {
+                $.ajax({
+                    url: '/Account/Invite',
+                    type: 'POST',
+                    data: {
+                      friendId: id  
+                    },
+                });                
+            }
+        },
+
+        computed: {
+            sortUsers: function () {
+
+                if (this.show) {
+                    return this.users.filter(e => e.Nickname.includes(this.find) || e.FullName.includes(this.find));
+                }
+            },
+
+        },
+
+        mounted() {
+
+            $.ajax({
+                url: '/Account/UsersString',
+                type: 'GET',
+                success: function (data) {
+                    this.users = JSON.parse(data);
+                    this.show = true;
+
+                    $("#predownloader").animate({ opacity: 0 }, 700, function () {
+                        $("#predownloader").css({ display: "none" });
+                        $("#app").animate({ opacity: 1 }, 700);
+                    });
+                }.bind(this),
+            });
+
+            setInterval(function() {
+
+                this.updateUsers();
+
+            }.bind(this), 20000);
+
+        }
+    })
+    
 </script>
+
+<style>
+    .bud {
+        float: left;
+        margin-left: 20px;
+    }
+</style>

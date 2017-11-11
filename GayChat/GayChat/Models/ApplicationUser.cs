@@ -16,6 +16,22 @@ namespace GayChat.Models
         public string FirstName { get; set; }
 
         public string Surname { get; set; }
+        
+        public string Chats_JSON
+        {
+            get
+            {
+                if (Chats == null)
+                    return null;
+                return JsonConvert.SerializeObject(Chats);
+            }
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                    return;
+                Chats = JsonConvert.DeserializeObject<List<Chat>>(value);
+            }
+        }
 
         public string Friends_JSON
         {
@@ -47,9 +63,25 @@ namespace GayChat.Models
         [NotMapped]
         public List<Friend> Friends { get; set; }
 
+        [NotMapped]
+        public List<Chat> Chats { get; set; }
+
+        public int NotViewedChats()
+        {
+            int count = 0;
+
+            foreach (var chat in Chats)
+                if (chat.NotViewedMessages.Count > 0)
+                    count++;
+
+            return count;
+        }
+
         public ApplicationUser()
         {
             Friends = new List<Friend>();
+
+            Chats = new List<Chat>();
         }
     }
 }

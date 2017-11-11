@@ -16,6 +16,7 @@ using System.IO;
 using GayChat.Models.ITCHat;
 using System.Text;
 using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
 
 namespace GayChat.Controllers
 {
@@ -102,8 +103,67 @@ namespace GayChat.Controllers
             return View();
         }
 
-        //
-        // GET: /Account/Register
+        [HttpGet]
+        [AllowAnonymous]
+        public string IsAuthorized()
+        {
+            var result = HttpContext.User.Identity.IsAuthenticated ? "True" : "False";
+
+            return result;
+        }
+
+        [HttpGet]
+        public async Task<int> GetNumberOfFriends()
+        {
+            var current = await _userManager.GetUserAsync(HttpContext.User);
+
+            return current.Friends.Where(e => e.Status == FriendStatus.Subscriber).ToList().Count;
+        }
+        
+        [HttpGet]
+        public IActionResult UserChat(string userID)
+        {
+            return View(model: userID);
+        }
+
+        [HttpGet]
+        public async Task<string> GetUserByID(string id)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+
+            return JsonConvert.SerializeObject(user);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> StartChat(string userId)
+        {
+            var current = await _userManager.GetUserAsync(HttpContext.User);
+            
+            if (current.Chats.Find(e => e.UserId == userId) == null)
+            {
+                var user = await _userManager.FindByIdAsync(userId);
+                
+                current.Chats.Add(new Chat() { UserId = user.Id, UserFullname = user.FirstName + " " + user.Surname, UserNickname = user.Nickname});
+
+                if (user.Chats.Find(e => e.UserId == current.Id) == null)
+                {
+                    user.Chats.Add(new Chat() { UserId = userId, UserFullname = current.FirstName + " " + current.Surname});
+                    await _userManager.UpdateAsync(user);
+                }
+
+                await _userManager.UpdateAsync(current);
+            }
+            
+            return RedirectToAction("UserChat", new {userID = userId});
+        }
+        
+        public async Task<string> GetChats()
+        {
+            var current = await _userManager.GetUserAsync(HttpContext.User);
+
+            return JsonConvert.SerializeObject(current.Chats);
+        }
+
         [HttpGet]
         [AllowAnonymous]
         public IActionResult Register(string returnUrl = null)
@@ -111,9 +171,7 @@ namespace GayChat.Controllers
             ViewData["ReturnUrl"] = returnUrl;
             return View();
         }
-
-        //
-        // POST: /Account/Register
+        
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -121,13 +179,15 @@ namespace GayChat.Controllers
         {
             ViewData["ReturnUrl"] = returnUrl;
 
+            string path = "";
+
             if (ModelState.IsValid)
             {
                 if (model.Image != null)
                 {
                     if (model.Image.Length > 0)
                     {
-                        string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "UserImages", model.Username.Replace(" ", string.Empty) + ".jpg");
+                        path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "UserImages", model.Username.Replace(" ", string.Empty) + ".jpg");
 
                         using (var fileStream = new FileStream(path, FileMode.Create))
                         {
@@ -137,7 +197,7 @@ namespace GayChat.Controllers
                 }
                 else
                 {
-                    string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "UserImages");
+                    path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "UserImages");
 
                     System.IO.File.Copy(Path.Combine(path, "DefaultUser.png"), Path.Combine(path, model.Username.Replace(" ", string.Empty) + ".jpg"));
                 }
@@ -202,13 +262,13 @@ namespace GayChat.Controllers
 
             return RedirectToAction("Contacts", controllerName: "Account");
         }
-
-
-
+        
         [HttpPost]
-        public async Task<IActionResult> Invite(string friendId)
+        public async Task Invite(string friendId)
         {
-            var current = await _userManager.FindByEmailAsync(HttpContext.User.Identity.Name);
+            var email = HttpContext.User.Identity.Name;
+
+            var current = await _userManager.FindByEmailAsync(email).ConfigureAwait(false);
 
             if (current.Friends.Find(e => e.FriendId == friendId) == null)
             {
@@ -221,39 +281,38 @@ namespace GayChat.Controllers
                 await _userManager.UpdateAsync(friend);
 
             }
-
-            return RedirectToAction("Contacts", controllerName: "Account");
         }
-
-
-
+        
         [HttpGet]
         public IActionResult FindUsers()
         {
-            var users = _userManager.Users.ToList();
-            users.RemoveAll(e => e.Email == HttpContext.User.Identity.Name);
-
-            return View(users);
+            return View();
         }
 
-        [HttpPost]
-        public IActionResult FindUsers(string data)
+        [HttpGet]
+        public async Task<string> UsersString()
         {
-            var users = _userManager.Users.ToList();
-            users.RemoveAll(e => e.Email == HttpContext.User.Identity.Name);
+            var allusers = _userManager.Users.ToList();
 
-            if (!string.IsNullOrEmpty(data))
-                users = users
-                    .Where(e => e.Nickname.ToLower().Contains(data) ||
-                    (e.FirstName + " " + e.Surname).ToLower().Contains(data.ToLower()) ||
-                    e.Email.ToLower().Contains(data))
-                    .ToList();
+            allusers.RemoveAll(e => e.Email == HttpContext.User.Identity.Name);
 
-            ViewBag.Searched = data;
+            var currentuser = await _userManager.GetUserAsync(HttpContext.User);
+            List<FindUsersModel> users = new List<FindUsersModel>();
 
-            return View(users);
+            foreach (var user in allusers)
+            {
+                var status = currentuser.GetStatusForFriendId(user.Id);
+
+                var user_ = new FindUsersModel(status) {Id = user.Id, Nickname = user.Nickname, FullName = user.FirstName + " " + user.Surname};
+
+                users.Add(user_);
+            }
+
+            var data = JsonConvert.SerializeObject(users);
+
+            return data;
         }
-
+        
         [HttpGet]
         [AllowAnonymous]
         public IActionResult GetUsers()
@@ -294,9 +353,7 @@ namespace GayChat.Controllers
 
             return View();
         }
-
-        //
-        // POST: /Account/Logout
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout()
@@ -305,9 +362,7 @@ namespace GayChat.Controllers
             _logger.LogInformation(4, "User logged out.");
             return RedirectToAction(nameof(HomeController.Index), "Home");
         }
-
-        //
-        // POST: /Account/ExternalLogin
+        
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -318,9 +373,7 @@ namespace GayChat.Controllers
             var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
             return Challenge(properties, provider);
         }
-
-        //
-        // GET: /Account/ExternalLoginCallback
+        
         [HttpGet]
         [AllowAnonymous]
         public async Task<IActionResult> ExternalLoginCallback(string returnUrl = null, string remoteError = null)
