@@ -6,30 +6,32 @@
 
 @if (!Context.Request.IsMobile())
 {
+    <div style="width: 500px; height: 600px; margin: auto; position: relative; margin-top: 30px; background-color: white; box-shadow: 0px 3px 7px rgba(0,0,0,0.5); overflow: hidden">
+
+        <div style="height: 62px; width: 100%;  background-color: #40c4ff ">
+            <div id="chatterInf" style="opacity: 0;">
+                <img id="chatterImage" :src="'/UserImages/' + chatterNickname + '.jpg'" style="width: 50px; height: 50px; margin: 6px; margin-left: 21px; border-radius: 50%; float: left; border: 1px solid white" />
+
+                <p style="float: left; margin-left: 2px; font-size: 17px; margin-top: 18px; color: white">{{chatterFullName}}</p>
+            </div>
+        </div>
+
+        <div style="overflow-y: auto; height: 478px; width: 521px; border-bottom: 1px solid #f1f1f1; border-top: 1px solid #f1f1f1">
 
 
-}
+        </div>
 
-
-<div style="width: 500px; height: 600px; margin: auto; position: relative; margin-top: 30px; background-color: white; box-shadow: 0px 3px 7px rgba(0,0,0,0.5); overflow: hidden">
-
-    <div style="height: 60px; width: 100%; ">
-        {{chatterFullName}}
-    </div>
-
-    <div style="overflow-y: auto; height: 480px; width: 521px; background-color: blue">
-
-        <div style="height: 1000px">
-
+        <div style="position: absolute; bottom: 0px; left: 0px; margin: 0px; width: 100%; height: 55px; background-color: #40c4ff">
+            
+            <input placeholder="Write your message" style="background-color: white; padding: 0px; margin: 0px; height: 35px; width: 330px; margin-top: 9px; margin-left: 24px; border-radius: 3px; padding-left: 7px; float: left"/>
+            <button class="btn waves-effect" style="float: right; background-color: white; color: rgba(0,0,0,0.7); font-size: 14px; margin-top: 9px; margin-right: 24px; height: 35px">Send</button>
         </div>
 
     </div>
 
-    <div style="position: absolute; bottom: 0px; left: 0px; background-color: red; width: 100%; height: 60px">
+}
 
-    </div>
 
-</div>
 
     @*<p> {{chatterId}} </p>*@
 

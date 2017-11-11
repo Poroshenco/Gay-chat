@@ -163,9 +163,9 @@
                 </li>
 
                 <li v-for="chat in allchats" style="cursor: pointer">
-                    <a class="waves-effect" v-on:click="goToChat(chat.UserId)" style="margin: 0px; height: 75px; padding: 0px">
+                    <a class="waves-effect" v-on:click="goToChat(chat.UserId, chat.UserFullname, chat.UserNickname)" style="margin: 0px; height: 75px; padding: 0px">
                         <div style="width: 100%; padding: 12px; overflow: hidden">
-                            <img class="circle" :src="'/UserImages/' + chat.UserNickname.substring(1) + '.jpg'" style="width: 50px; height: 50px; float: left" />
+                            <img class="circle" :src="'/UserImages/' + chat.UserNickname.substring(1) + '.jpg'" style="width: 50px; height: 50px; float: left; border: 1px solid #03a9f4" />
 
                             <p style="float: left; margin: 0px; margin-left: 6px; font-size: 16px; margin-top: 2px">{{chat.UserFullname}}</p>
                         </div>

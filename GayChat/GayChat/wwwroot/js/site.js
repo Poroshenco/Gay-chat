@@ -22,7 +22,7 @@
 
     methods: {
         
-        goToChat: function (id) {
+        goToChat: function (id, fullname, nickname) {
 
             if (this.isChat) {
                 
@@ -31,7 +31,8 @@
                 if (this.chatterId != id) {
 
                     this.chatterId = id;
-
+                    this.chatterFullName = fullname;
+                    this.chatterNickname = nickname.substring(1);
                 }
 
             }
@@ -81,20 +82,7 @@
         if (url.indexOf("UserChat") > 0 && url.indexOf("userID") > url.indexOf("UserChat")) {
             id = url.substring(url.indexOf("userID") + 7);
             this.chatterId = id;
-
-            //$.ajax({
-            //    url: '/Account/GetUserByID',
-            //    data: {
-            //        id: id,
-            //    },
-            //    type: 'GET',
-            //    success: function (data) {
-            //        var user = JSON.parse(data);
-            //        this.chatterNickname = user.Nickname;
-            //        this.chatterFullName = user.FirstName + " " + user.Surname;
-
-            //    }.bind(this)
-            //});
+            
         }
 
         $.ajax({
@@ -115,7 +103,9 @@
 
                             var user = allchats.filter(e => e.UserId === id)[0];
                             this.chatterFullName = user.UserFullname;
-                            this.chatterNickname = user.chatterNickname;
+                            this.chatterNickname = user.UserNickname.substring(1);
+
+                            $("#chatterInf").animate({ opacity: 1 }, 500);
 
                         }.bind(this)
                     });
