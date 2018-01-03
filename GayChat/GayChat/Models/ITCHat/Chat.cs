@@ -13,20 +13,11 @@ namespace GayChat.Models.ITCHat
 
         public string UserNickname { get; set; }
 
-        public List<Message> NotViewedMessages { get; set; }
-
         public List<Message> Messages { get; set; }
 
         public Chat()
         {
-            NotViewedMessages = new List<Message>();
-
             Messages = new List<Message>();
-        }
-
-        public void Viewed()
-        {
-            Messages.AddRange(NotViewedMessages);
         }
     }
 }

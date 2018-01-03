@@ -16,7 +16,7 @@ namespace GayChat.Models
         public string FirstName { get; set; }
 
         public string Surname { get; set; }
-        
+
         public string Chats_JSON
         {
             get
@@ -71,7 +71,7 @@ namespace GayChat.Models
             int count = 0;
 
             foreach (var chat in Chats)
-                if (chat.NotViewedMessages.Count > 0)
+                if (chat.Messages.Where(e => e.IsNew == true).ToList().Count > 0)
                     count++;
 
             return count;

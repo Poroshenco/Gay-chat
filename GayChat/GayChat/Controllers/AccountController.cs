@@ -119,11 +119,72 @@ namespace GayChat.Controllers
 
             return current.Friends.Where(e => e.Status == FriendStatus.Subscriber).ToList().Count;
         }
-        
+
         [HttpGet]
         public IActionResult UserChat(string userID)
         {
             return View(model: userID);
+        }
+
+        [HttpGet]
+        public async Task<string> GetNewMessages(string id)
+        {
+            var current = await _userManager.GetUserAsync(HttpContext.User);
+
+            var chat = current.Chats.Find(e => e.UserId == id);
+
+            var messages = "";
+            var newmessages = chat.Messages.Where(e => e.IsNew == true);
+            
+            if (newmessages != null)
+            {
+                messages = JsonConvert.SerializeObject(newmessages);
+
+                foreach (var message in newmessages)
+                    message.IsNew = false;
+
+                await _userManager.UpdateAsync(current);
+            }
+            
+            return messages;
+        }
+
+        [HttpGet]
+        public async Task SendMessage(string message, string userId)
+        {
+            var current = await _userManager.GetUserAsync(HttpContext.User);
+            var user = await _userManager.FindByIdAsync(userId);
+            
+            current.Chats.Find(e => e.UserId == userId).Messages.Add(new Message() { MessageInner = message, FromMe = true, IsNew=false });
+
+            if (user.Chats.Find(e => e.UserId == current.Id) == null)
+                user.Chats.Add(new Chat() { UserFullname = current.FirstName + " " + current.Surname, UserId = current.Id, UserNickname = current.Nickname });
+
+            user.Chats.Find(e => e.UserId == current.Id).Messages.Add(new Message() { MessageInner = message, FromMe = false, IsNew = true });
+
+            await _userManager.UpdateAsync(current);
+            await _userManager.UpdateAsync(user);
+        }
+
+        [HttpGet]
+        public async Task<string> GetMessangesForChat(string userID)
+        {
+            var user = await _userManager.GetUserAsync(HttpContext.User);
+
+            var allmessanges = user.Chats.Find(e => e.UserId == userID);
+
+            var messages = allmessanges.Messages;
+            var newmessages = allmessanges.Messages.Where(e => e.IsNew == true);
+
+            if (newmessages != null)
+            {
+                foreach (var message in newmessages)
+                    message.IsNew = false;
+
+                await _userManager.UpdateAsync(user);
+            }
+
+            return JsonConvert.SerializeObject(messages);
         }
 
         [HttpGet]
@@ -138,25 +199,25 @@ namespace GayChat.Controllers
         public async Task<ActionResult> StartChat(string userId)
         {
             var current = await _userManager.GetUserAsync(HttpContext.User);
-            
+
             if (current.Chats.Find(e => e.UserId == userId) == null)
             {
                 var user = await _userManager.FindByIdAsync(userId);
-                
-                current.Chats.Add(new Chat() { UserId = user.Id, UserFullname = user.FirstName + " " + user.Surname, UserNickname = user.Nickname});
+
+                current.Chats.Add(new Chat() { UserId = user.Id, UserFullname = user.FirstName + " " + user.Surname, UserNickname = user.Nickname });
 
                 if (user.Chats.Find(e => e.UserId == current.Id) == null)
                 {
-                    user.Chats.Add(new Chat() { UserId = userId, UserFullname = current.FirstName + " " + current.Surname});
+                    user.Chats.Add(new Chat() { UserId = current.Id, UserFullname = current.FirstName + " " + current.Surname, UserNickname = current.Nickname });
                     await _userManager.UpdateAsync(user);
                 }
 
                 await _userManager.UpdateAsync(current);
             }
-            
-            return RedirectToAction("UserChat", new {userID = userId});
+
+            return RedirectToAction("UserChat", new { userID = userId });
         }
-        
+
         public async Task<string> GetChats()
         {
             var current = await _userManager.GetUserAsync(HttpContext.User);
@@ -171,7 +232,7 @@ namespace GayChat.Controllers
             ViewData["ReturnUrl"] = returnUrl;
             return View();
         }
-        
+
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -262,7 +323,7 @@ namespace GayChat.Controllers
 
             return RedirectToAction("Contacts", controllerName: "Account");
         }
-        
+
         [HttpPost]
         public async Task Invite(string friendId)
         {
@@ -270,19 +331,31 @@ namespace GayChat.Controllers
 
             var current = await _userManager.FindByEmailAsync(email).ConfigureAwait(false);
 
-            if (current.Friends.Find(e => e.FriendId == friendId) == null)
-            {
-                var friend = await _userManager.FindByIdAsync(friendId);
+            var friend = current.Friends.Find(e => e.FriendId == friendId);
 
-                current.Friends.Add(new Friend { FriendId = friend.Id, Status = FriendStatus.Invited });
-                friend.Friends.Add(new Friend { FriendId = current.Id, Status = FriendStatus.Subscriber });
+            if (friend == null)
+            {
+                var user = await _userManager.FindByIdAsync(friendId);
+
+                current.Friends.Add(new Friend { FriendId = user.Id, Status = FriendStatus.Invited });
+                user.Friends.Add(new Friend { FriendId = current.Id, Status = FriendStatus.Subscriber });
 
                 await _userManager.UpdateAsync(current);
-                await _userManager.UpdateAsync(friend);
-
+                await _userManager.UpdateAsync(user);
             }
+            else if (friend.Status == FriendStatus.Subscriber)
+            {
+                var user = await _userManager.FindByIdAsync(friendId);
+
+                friend.Status = FriendStatus.Accepted;
+                user.Friends.Find(e => e.FriendId == current.Id).Status = FriendStatus.Accepted;
+
+                await _userManager.UpdateAsync(current);
+                await _userManager.UpdateAsync(user);
+            }
+
         }
-        
+
         [HttpGet]
         public IActionResult FindUsers()
         {
@@ -303,7 +376,7 @@ namespace GayChat.Controllers
             {
                 var status = currentuser.GetStatusForFriendId(user.Id);
 
-                var user_ = new FindUsersModel(status) {Id = user.Id, Nickname = user.Nickname, FullName = user.FirstName + " " + user.Surname};
+                var user_ = new FindUsersModel(status) { Id = user.Id, Nickname = user.Nickname, FullName = user.FirstName + " " + user.Surname };
 
                 users.Add(user_);
             }
@@ -312,7 +385,29 @@ namespace GayChat.Controllers
 
             return data;
         }
-        
+
+        [HttpGet]
+        public async Task RefreshUsers(string id)
+        {
+            var user = _userManager.Users.ToList()[int.Parse(id)];
+
+            user.Chats = new List<Chat>();
+            user.Friends = new List<Friend>();
+
+            await _userManager.UpdateAsync(user);
+
+            //foreach (var user in allusers)
+            //{
+            //    user.Chats = new List<Chat>();
+
+            //    user.Friends = new List<Friend>();
+
+            //    await _userManager.UpdateAsync(user);
+
+            //    await Task.Delay(10000);
+            //}
+        }
+
         [HttpGet]
         [AllowAnonymous]
         public IActionResult GetUsers()
@@ -353,7 +448,7 @@ namespace GayChat.Controllers
 
             return View();
         }
-        
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout()
@@ -362,7 +457,7 @@ namespace GayChat.Controllers
             _logger.LogInformation(4, "User logged out.");
             return RedirectToAction(nameof(HomeController.Index), "Home");
         }
-        
+
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -373,7 +468,7 @@ namespace GayChat.Controllers
             var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
             return Challenge(properties, provider);
         }
-        
+
         [HttpGet]
         [AllowAnonymous]
         public async Task<IActionResult> ExternalLoginCallback(string returnUrl = null, string remoteError = null)

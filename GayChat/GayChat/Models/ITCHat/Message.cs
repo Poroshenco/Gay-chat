@@ -7,13 +7,21 @@ namespace GayChat.Models.ITCHat
 {
     public class Message
     {
-        public DateTime SendTime { get; set; }
+        public DateTime FullSendTime { get; set; }
+
+        public string ShortSendTime { get; set; }
 
         public string MessageInner { get; set; }
 
+        public bool FromMe { get; set; }
+
+        public bool IsNew { get; set; }
+
         public Message()
         {
-            SendTime = DateTime.Now;
+            FullSendTime = DateTime.Now;
+
+            ShortSendTime = DateTime.Now.ToString("HH:mm");
         }
     }
 }
