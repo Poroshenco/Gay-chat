@@ -62,7 +62,7 @@
 
     <div id="main">
         <div class="navbar-fixed" >
-            <nav style="height: 8.4vh;">
+            <nav>
                 <div class="nav-wrapper">
                     <a data-activates="slide-out" class="button-collapse menu-left" style="display: block; cursor: pointer"><i class="material-icons">menu</i></a>
 
@@ -228,7 +228,10 @@
 
                 var isMobile = @isMobile;
 
+                document.getElementById("messages").style.height = (screen.height - 300) + "px";
+
                 if (isMobile) {
+                    
                     $('#mainIndex').css({ paddingBottom: screen.height - 56 });
                 }
                 else {

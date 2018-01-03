@@ -47,7 +47,7 @@
 }
 else
 {
-    <div style="height: 8.8vh; background: #40c4ff">
+    <div style="position: fixed; top: 57px; height: 60px; width: 100%; background: #40c4ff">
         <div id="chatterInf" style="opacity: 0;">
             <img id="chatterImage" :src="'/UserImages/' + chatterNickname + '.jpg'" style="width: 48px; height: 48px; margin: 6px; margin-left: 21px; border-radius: 50%; float: left; border: 1px solid white" />
 
@@ -58,7 +58,7 @@ else
 
 
 
-    <div id="messages" style="overflow-y: auto; height: 74vh; border-bottom: 1px solid #f1f1f1; border-top: 1px solid #f1f1f1; width: 103%">
+    <div id="messages" style="overflow-y: auto; border-bottom: 1px solid #f1f1f1; border-top: 1px solid #f1f1f1; width: 100%; margin-top: 58px; padding-top: 3px; padding-bottom: 10px;">
         <div v-for="message in messages">
 
             <p v-if="message.FromMe" style="float: right; margin: 9px; width: 80%; text-align: right; margin-right: 1px; font-size: 17px; color: white">
@@ -82,7 +82,7 @@ else
 
 
 
-    <div style="height: 8.8vh; background: #40c4ff">
+    <div style="position: fixed; width: 100%; bottom: 0; height: 57px; background: #40c4ff">
         <input v-model="draft" placeholder="Write your message" style="background-color: white; padding: 0px; margin: 0px; height: 35px; width: 70%; margin-top: 12px; margin-left: 10px; border-radius: 3px; padding-left: 7px; float: left; height: 36px" />
         <button v-on:click="sendMessage()" class="btn waves-effect" style="float: right; border-radius: 7px; border: 2px solid white; color: white; background-color: transparent; font-size: 17px; width: 20%; padding:0px; margin-top: 12px; margin-right: 10px; height: 36px; padding-bottom: 5px">Send</button>
 
