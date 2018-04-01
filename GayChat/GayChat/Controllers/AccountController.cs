@@ -135,7 +135,7 @@ namespace GayChat.Controllers
 
             var messages = "";
             var newmessages = chat.Messages.Where(e => e.IsNew == true);
-            
+
             if (newmessages != null)
             {
                 messages = JsonConvert.SerializeObject(newmessages);
@@ -145,7 +145,7 @@ namespace GayChat.Controllers
 
                 await _userManager.UpdateAsync(current);
             }
-            
+
             return messages;
         }
 
@@ -154,8 +154,8 @@ namespace GayChat.Controllers
         {
             var current = await _userManager.GetUserAsync(HttpContext.User);
             var user = await _userManager.FindByIdAsync(userId);
-            
-            current.Chats.Find(e => e.UserId == userId).Messages.Add(new Message() { MessageInner = message, FromMe = true, IsNew=false });
+
+            current.Chats.Find(e => e.UserId == userId).Messages.Add(new Message() { MessageInner = message, FromMe = true, IsNew = false });
 
             if (user.Chats.Find(e => e.UserId == current.Id) == null)
                 user.Chats.Add(new Chat() { UserFullname = current.FirstName + " " + current.Surname, UserId = current.Id, UserNickname = current.Nickname });
@@ -220,9 +220,34 @@ namespace GayChat.Controllers
 
         public async Task<string> GetChats()
         {
-            var current = await _userManager.GetUserAsync(HttpContext.User);
+            var chats = (await _userManager.GetUserAsync(HttpContext.User)).Chats;
 
-            return JsonConvert.SerializeObject(current.Chats);
+            var viewchats = new List<ViewChatModel>();
+
+            foreach (var e in chats)
+            {
+                var chat = new ViewChatModel() { UserNickname = e.UserNickname, UserFullname = e.UserFullname, UserId = e.UserId };
+
+                if (e.Messages.Count != 0)
+                {
+                    var message = e.Messages[e.Messages.Count - 1];
+
+                    chat.FromMe = message.FromMe;
+                    chat.LastMessage = message.MessageInner;
+
+                    if (!message.FromMe)
+                        chat.IsNew = message.IsNew;
+                }
+                else
+                {
+                    chat.FromMe = false;
+                    chat.LastMessage = "Empty";
+                }
+
+                viewchats.Add(chat);
+            }
+
+            return JsonConvert.SerializeObject(viewchats);
         }
 
         [HttpGet]

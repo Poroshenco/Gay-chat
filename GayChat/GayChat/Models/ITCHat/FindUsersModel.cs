@@ -34,7 +34,7 @@ namespace GayChat.Models.ITCHat
             {
                 case FriendStatus.Accepted:
                 {
-                    return "#ff9800";
+                    return "#6d4c41";
                 }
                 case FriendStatus.Invited:
                 {
@@ -42,11 +42,11 @@ namespace GayChat.Models.ITCHat
                 }
                 case FriendStatus.Subscriber:
                 {
-                    return "#00e676";
+                    return "#6d4c41";
                 }
                 default:
                 {
-                    return "#00b0ff";
+                    return "#6d4c41";
                 }
             }
         }

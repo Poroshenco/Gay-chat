@@ -1,0 +1,17 @@
+﻿.findUsersDiv {
+    float: left;
+    width: 370px;
+    padding-bottom: 10px;
+    padding-top: 5px;
+    margin: 20px;
+    opacity: 1;
+    background: #f5f5f5;
+    box-shadow: 0px 3px 8px #8d6e63;
+    transition: 0.3s ease-in-out;
+}
+
+    .findUsersDiv:hover {
+        box-shadow: 0px 4px 14px #795548;
+    }
+
+

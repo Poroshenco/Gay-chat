@@ -19,8 +19,10 @@
     <script src="~/lib/jquery/dist/jquery.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
     <script src="https://unpkg.com/vue"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-scrollTo/2.1.2/jquery.scrollTo.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-localScroll/2.0.0/jquery.localScroll.min.js"></script>
+    @*<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-scrollTo/2.1.2/jquery.scrollTo.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-localScroll/2.0.0/jquery.localScroll.min.js"></script>*@
+    
+    <script src="~/js/parallax.js"></script>
 
     <environment names="Development">
         <link rel="stylesheet" href="~/css/site.css" />
@@ -33,7 +35,7 @@
     </environment>
     @Html.Raw(JavaScriptSnippet.FullScript)
 </head>
-<body style="background-color: #fafafa">
+<body style="background-color: #f1f1f1">
 
     @{
         string nickname = "", image = "", fname = "", surname = "";
@@ -61,28 +63,26 @@
     }
 
     <div id="main">
-        <div class="navbar-fixed" >
-            <nav>
+        <div class="navbar-fixed" style="position: fixed; top: 0px;">
+            <nav style="opacity: 0.8; border-bottom: 1px solid #e0e0e0">
                 <div class="nav-wrapper">
                     <a data-activates="slide-out" class="button-collapse menu-left" style="display: block; cursor: pointer"><i class="material-icons">menu</i></a>
 
                     @if (User.Identity.IsAuthenticated)
                     {
-                        @*<p id="myFullName" style="display: none">@(fname + surname)</p>
-                        <p id="myNickname" style="display: none">@nickname</p>*@
 
                         <a data-activates="slide-chats" class="button-collapse menu-right right" style="display: block; cursor: pointer"><i class="material-icons">send</i></a>
                     }
 
-                    <a href="/Home/Index" class="brand-logo center" style="letter-spacing: 2px">Gay Chat</a>
+                    <a href="/Home/Index" class="brand-logo center" style="letter-spacing: 2px">Telehram</a>
 
 
                     @if (SignInManager.IsSignedIn(User))
                     {
                         <ul class="left hide-on-med-and-down" style="margin-left: 100px">
-                            @*<li><a href="/Account/GetUsers">Admin</a></li>*@
+
                             <li><a href="/Account/FindUsers">Find</a></li>
-                            <li><a href="/Account/Contacts">Contacts<span class="new badge" style="background: white; color: #0091ea ">{{amountoffriends}}</span></a></li>
+                            <li><a href="/Account/Contacts">Contacts<span class="new badge" style="background: white; color: #6d4c41  ">{{amountoffriends}}</span></a></li>
                         </ul>
 
                         <form asp-area="" asp-controller="Account" asp-action="Logout" method="post" id="logoutForm">
@@ -118,7 +118,7 @@
                     <div class="user-view" style="padding: 12px">
 
                         <div class="background">
-                            <img src="/images/slide-nav-background.jpg">
+                            <img src="/images/slide-nav-background.jpg" style="width: 100%; height: 100%">
                         </div>
 
                         <div style="height: 80px; margin-top: 20px; position: relative">
@@ -154,22 +154,30 @@
                 <li>
                     <div class="user-view" style="padding-top: 12px; padding-bottom: 12px; margin: 0px">
 
-                        <div class="background" style="background-color: #00b0ff ">
-
+                        <div class="background">
+                            <img src="~/images/slide-nav-right-background.jpg" style="width: 100%; height: 100%">
                         </div>
 
                         <div style="position: relative">
-                            <p style="color: white; font-size: 26px; margin: 0px">Chats</p>
+                            <p style="color: #e0e0e0; font-size: 26px; margin: 0px; font-family: Cambria, Cochin, Georgia, Times, Times New Roman, serif">Chats</p>
+                            <p style="position: absolute; top: -10px; left: 65px; color: white; color: #bdbdbd; font-size: 13px; text-decoration: underline; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif">{{newmessages}} NEW</p>
                         </div>
                     </div>
                 </li>
 
-                <li v-for="chat in allchats" style="cursor: pointer">
+                <li v-for="chat in allchats" style="cursor: pointer; border-bottom: 1px solid #9e9e9e  ">
                     <a class="waves-effect" v-on:click="goToChat(chat.UserId, chat.UserFullname, chat.UserNickname)" style="margin: 0px; height: 75px; padding: 0px">
                         <div style="width: 100%; padding: 12px; overflow: hidden">
-                            <img class="circle" :src="'/UserImages/' + chat.UserNickname.substring(1) + '.jpg'" style="width: 50px; height: 50px; float: left; border: 1px solid #03a9f4" />
+                            <img class="circle" :src="'/UserImages/' + chat.UserNickname.substring(1) + '.jpg'" style="width: 50px; height: 50px; float: left; border: 1px solid #6d4c41" />
 
-                            <p style="float: left; margin: 0px; margin-left: 6px; font-size: 16px; margin-top: 2px">{{chat.UserFullname}}</p>
+                            <span v-if="chat.IsNew" class="new badge" style="position: absolute; left: 8px; top: 30px; "></span>
+
+                            <p style="float: left; margin: 0px; padding: 0px; height: 15px; margin-left: 6px; font-size: 16px; margin-top: -8px; width: 187px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #616161 ">{{chat.UserFullname}}</p>
+
+
+                            <p v-if="chat.FromMe" style="float: left; margin: 0px; margin-left: 7px; margin-top: 3px; font-family: 'Comic Sans MS'; color: #757575  ">You: {{chat.LastMessage}}</p>
+                            <p v-else style="float: left; margin: 0px; margin-left: 7px; margin-top: 2px; font-family: 'Comic Sans MS'; color: #757575 ">{{chat.LastMessage}} </p>
+
                         </div>
                         <hr style="margin: 0px" />
                     </a>
@@ -197,12 +205,20 @@
 
         (function ($) {
             $(function () {
-                
 
-                setTimeout(function() {
+                $("#maincontainer_1").delay(300).animate({ opacity: 0.97 }, 600, function () {
+
+                    $("#maindiv_1").animate({ opacity: 0.9, marginLeft: (screen.width * 0.5 - 20) + "px" }, 1000, function () {
+
+                        $("#maindiv_2").animate({ opacity: 1, marginLeft: (screen.width * 0.5 + 10) + "px" }, 800)
+                    });
+                })
+
+
+                setTimeout(function () {
                     $('.materialboxed').materialbox();
                 },
-                4000);
+                    4000);
 
                 $('ul.tabs').tabs();
 
@@ -210,16 +226,16 @@
                     menuWidth: 300, // Default is 300
                     edge: 'left', // Choose the horizontal origin
                     closeOnClick: true, // Closes side-nav on <a> clicks, useful for Angular/Meteor
-                    draggable: false, // Choose whether you can drag to open on touch screens,
+                    draggable: true, // Choose whether you can drag to open on touch screens,
                 }
                 );
 
                 $('.menu-right').sideNav({
-                        menuWidth: 270, // Default is 300
-                        edge: 'left', // Choose the horizontal origin
-                        closeOnClick: true, // Closes side-nav on <a> clicks, useful for Angular/Meteor
-                        draggable: true, // Choose whether you can drag to open on touch screens,
-                    }
+                    menuWidth: 280, // Default is 300
+                    edge: 'right', // Choose the horizontal origin
+                    closeOnClick: true, // Closes side-nav on <a> clicks, useful for Angular/Meteor
+                    draggable: true, // Choose whether you can drag to open on touch screens,
+                }
                 );
 
                 @{
@@ -228,22 +244,17 @@
 
                 var isMobile = @isMobile;
 
-                document.getElementById("messages").style.height = (screen.height - 300) + "px";
 
-                if (isMobile) {
-                    
-                    $('#mainIndex').css({ paddingBottom: screen.height - 56 });
+                if (window.location.href.indexOf("UserChat") > 0 && isMobile) {
+                    document.getElementById("messages").style.height = (screen.height - 300) + "px";
                 }
-                else {
-                    $('#mainIndex').css({ paddingBottom: screen.height - 15 });
-                }
-                
+
             });
         })(jQuery);
 
     </script>
 
-    
+
 
     <environment names="Development">
         <script src="~/lib/jquery/dist/jquery.js"></script>

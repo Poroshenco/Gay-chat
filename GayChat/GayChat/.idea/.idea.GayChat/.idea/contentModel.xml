@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ContentModelStore">
+    <e p="C:\Users\danil\.Rider2017.3\system\resharper-host\local\Transient\ReSharperHost\v11\SolutionCaches\_GayChat.2076888581.00" t="ExcludeRecursive" />
+    <e p="C:\Users\danil\Documents\GitHub\Gay-chat\GayChat\GayChat" t="IncludeRecursive">
+      <e p=".bowerrc" t="Include" />
+      <e p="appsettings.Development.json" t="Include" />
+      <e p="appsettings.json" t="Include" />
+      <e p="bin" t="ExcludeRecursive" />
+      <e p="bower.json" t="Include" />
+      <e p="bundleconfig.json" t="Include" />
+      <e p="Controllers" t="Include">
+        <e p="AccountController.cs" t="Include" />
+        <e p="HomeController.cs" t="Include" />
+        <e p="ManageController.cs" t="Include" />
+      </e>
+      <e p="Data" t="Include">
+        <e p="ApplicationDbContext.cs" t="Include" />
+      </e>
+      <e p="Extensions" t="Include">
+        <e p="StringExtension.cs" t="Include" />
+      </e>
+      <e p="GayChat.csproj" t="IncludeRecursive" />
+      <e p="GayChat.sln" t="IncludeFlat" />
+      <e p="Migrations" t="Include">
+        <e p="20171018181259_init3.cs" t="Include" />
+        <e p="20171018181259_init3.Designer.cs" t="Include" />
+        <e p="ApplicationDbContextModelSnapshot.cs" t="Include" />
+      </e>
+      <e p="Models" t="Include">
+        <e p="AccountViewModels" t="Include">
+          <e p="ExternalLoginConfirmationViewModel.cs" t="Include" />
+          <e p="ForgotPasswordViewModel.cs" t="Include" />
+          <e p="LoginViewModel.cs" t="Include" />
+          <e p="RegisterViewModel.cs" t="Include" />
+          <e p="ResetPasswordViewModel.cs" t="Include" />
+          <e p="SendCodeViewModel.cs" t="Include" />
+          <e p="VerifyCodeViewModel.cs" t="Include" />
+        </e>
+        <e p="ApplicationUser.cs" t="Include" />
+        <e p="ITCHat" t="Include">
+          <e p="Chat.cs" t="Include" />
+          <e p="FindUsersModel.cs" t="Include" />
+          <e p="Friend.cs" t="Include" />
+          <e p="Message.cs" t="Include" />
+          <e p="UserChatModel.cs" t="Include" />
+          <e p="ViewChatModel.cs" t="Include" />
+        </e>
+        <e p="ManageViewModels" t="Include">
+          <e p="AddPhoneNumberViewModel.cs" t="Include" />
+          <e p="ChangePasswordViewModel.cs" t="Include" />
+          <e p="ConfigureTwoFactorViewModel.cs" t="Include" />
+          <e p="FactorViewModel.cs" t="Include" />
+          <e p="IndexViewModel.cs" t="Include" />
+          <e p="ManageLoginsViewModel.cs" t="Include" />
+          <e p="RemoveLoginViewModel.cs" t="Include" />
+          <e p="SetPasswordViewModel.cs" t="Include" />
+          <e p="VerifyPhoneNumberViewModel.cs" t="Include" />
+        </e>
+      </e>
+      <e p="obj" t="ExcludeRecursive">
+        <e p="Debug" t="Include">
+          <e p="netcoreapp1.1" t="Include">
+            <e p="GayChat.AssemblyInfo.cs" t="Include" />
+          </e>
+        </e>
+      </e>
+      <e p="packages" t="ExcludeRecursive" />
+      <e p="Program.cs" t="Include" />
+      <e p="Properties" t="Include">
+        <e p="launchSettings.json" t="Include" />
+        <e p="PublishProfiles" t="Include">
+          <e p="Default Settings.pubxml" t="Include" />
+        </e>
+      </e>
+      <e p="Services" t="Include">
+        <e p="IEmailSender.cs" t="Include" />
+        <e p="ISmsSender.cs" t="Include" />
+        <e p="MessageServices.cs" t="Include" />
+      </e>
+      <e p="Startup.cs" t="Include" />
+      <e p="Views" t="Include">
+        <e p="_ViewImports.cshtml" t="Include" />
+        <e p="_ViewStart.cshtml" t="Include" />
+        <e p="Account" t="Include">
+          <e p="AccessDenied.cshtml" t="Include" />
+          <e p="AccountSettings.cshtml" t="Include" />
+          <e p="ConfirmEmail.cshtml" t="Include" />
+          <e p="Contacts.cshtml" t="Include" />
+          <e p="ExternalLoginConfirmation.cshtml" t="Include" />
+          <e p="ExternalLoginFailure.cshtml" t="Include" />
+          <e p="FindUsers.cshtml" t="Include" />
+          <e p="ForgotPassword.cshtml" t="Include" />
+          <e p="ForgotPasswordConfirmation.cshtml" t="Include" />
+          <e p="GetUsers.cshtml" t="Include" />
+          <e p="Lockout.cshtml" t="Include" />
+          <e p="Login.cshtml" t="Include" />
+          <e p="Register.cshtml" t="Include" />
+          <e p="ResetPassword.cshtml" t="Include" />
+          <e p="ResetPasswordConfirmation.cshtml" t="Include" />
+          <e p="SendCode.cshtml" t="Include" />
+          <e p="UserChat.cshtml" t="Include" />
+          <e p="VerifyCode.cshtml" t="Include" />
+        </e>
+        <e p="Home" t="Include">
+          <e p="About.cshtml" t="Include" />
+          <e p="Contact.cshtml" t="Include" />
+          <e p="Index.cshtml" t="Include" />
+        </e>
+        <e p="Index.cshtml" t="Include" />
+        <e p="Manage" t="Include">
+          <e p="AddPhoneNumber.cshtml" t="Include" />
+          <e p="ChangePassword.cshtml" t="Include" />
+          <e p="Index.cshtml" t="Include" />
+          <e p="ManageLogins.cshtml" t="Include" />
+          <e p="SetPassword.cshtml" t="Include" />
+          <e p="VerifyPhoneNumber.cshtml" t="Include" />
+        </e>
+        <e p="Shared" t="Include">
+          <e p="_Layout.cshtml" t="Include" />
+          <e p="_LoginPartial.cshtml" t="Include" />
+          <e p="_ValidationScriptsPartial.cshtml" t="Include" />
+          <e p="Error.cshtml" t="Include" />
+        </e>
+      </e>
+      <e p="wwwroot" t="Include">
+        <e p="css" t="Include">
+          <e p="FindUsers.css" t="Include" />
+          <e p="LoginStyle.css" t="Include" />
+          <e p="materialize.css" t="Include" />
+          <e p="materialize.css.map" t="Include" />
+          <e p="site.css" t="Include" />
+          <e p="site.min.css" t="Include" />
+        </e>
+        <e p="favicon.ico" t="Include" />
+        <e p="images" t="Include">
+          <e p="DefaultUser.png" t="Include" />
+          <e p="findusers-background.jpg" t="Include" />
+          <e p="PC_Index.jpg" t="Include" />
+          <e p="PC_Index_2.jpg" t="Include" />
+          <e p="PC_Index_3.jpg" t="Include" />
+          <e p="PC_Index_4.jpg" t="Include" />
+          <e p="SignedIn_Index.jpg" t="Include" />
+          <e p="SignedIn_Index_Mobile.jpg" t="Include" />
+          <e p="slide-nav-background.jpg" t="Include" />
+          <e p="Tropical_Index.jpg" t="Include" />
+          <e p="Tropical_Index_Mobile.jpg" t="Include" />
+        </e>
+        <e p="js" t="Include">
+          <e p="jquery.animate-shadow.js" t="Include" />
+          <e p="materialize.js" t="Include" />
+          <e p="site.js" t="Include" />
+        </e>
+        <e p="lib" t="Include">
+          <e p="jquery" t="Include">
+            <e p=".bower.json" t="Include" />
+            <e p="dist" t="Include">
+              <e p="jquery.js" t="Include" />
+              <e p="jquery.min.js" t="Include" />
+              <e p="jquery.min.map" t="Include" />
+            </e>
+            <e p="LICENSE.txt" t="Include" />
+          </e>
+          <e p="jquery-validation" t="Include">
+            <e p=".bower.json" t="Include" />
+            <e p="dist" t="Include">
+              <e p="additional-methods.js" t="Include" />
+              <e p="additional-methods.min.js" t="Include" />
+              <e p="jquery.validate.js" t="Include" />
+              <e p="jquery.validate.min.js" t="Include" />
+            </e>
+            <e p="LICENSE.md" t="Include" />
+          </e>
+          <e p="jquery-validation-unobtrusive" t="Include">
+            <e p=".bower.json" t="Include" />
+            <e p="jquery.validate.unobtrusive.js" t="Include" />
+            <e p="jquery.validate.unobtrusive.min.js" t="Include" />
+          </e>
+        </e>
+        <e p="UserImages" t="Include">
+          <e p="@foodCanBeVeryHot.jpg" t="Include" />
+          <e p="andrew.jpg" t="Include" />
+          <e p="andreygay.jpg" t="Include" />
+          <e p="Avatar.jpg" t="Include" />
+          <e p="Avatar2.jpg" t="Include" />
+          <e p="batyka.jpg" t="Include" />
+          <e p="danilka.jpg" t="Include" />
+          <e p="DefaultUser.png" t="Include" />
+          <e p="donald228.jpg" t="Include" />
+          <e p="donaldoCaprio.jpg" t="Include" />
+          <e p="foodCanBeVeryHot.jpg" t="Include" />
+          <e p="greatAgain.jpg" t="Include" />
+          <e p="novikov2k17.jpg" t="Include" />
+          <e p="novikovdanil2001.jpg" t="Include" />
+          <e p="ovalniyRIP.jpg" t="Include" />
+          <e p="Penis.jpg" t="Include" />
+          <e p="poproshaika.jpg" t="Include" />
+          <e p="poroh1488.jpg" t="Include" />
+          <e p="stepurchik.jpg" t="Include" />
+          <e p="userpenis.jpg" t="Include" />
+        </e>
+      </e>
+    </e>
+  </component>
+</project>

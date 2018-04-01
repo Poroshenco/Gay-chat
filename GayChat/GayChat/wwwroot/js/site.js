@@ -8,6 +8,7 @@
         allchats: {},
         isChat: false,
 
+        newmessages: 0,
         messages: {},
         draft: "",
 
@@ -34,7 +35,7 @@
                     },
                     success: function (data) {
 
-                        var draftmes = { MessageInner: this.draft, FromMe: true, SendTime: new Date() };
+                        var draftmes = { MessageInner: this.draft, FromMe: true, ShortSendTime: "now" };
 
                         this.messages.push(draftmes);
 
@@ -131,6 +132,61 @@
         this.isChat = isChat;
         var id = "";
 
+        $.ajax({
+            url: '/Account/IsAuthorized',
+            type: 'GET',
+            success: function (data) {
+
+                if (data === "True") {
+                    this.getAmountOfFriends();
+
+                    $.ajax({
+                        url: '/Account/GetChats',
+                        type: 'GET',
+                        success: function (data) {
+
+                            var allchats = JSON.parse(data);
+                            this.allchats = allchats;
+
+                            if (isChat) {
+                                var user = allchats.filter(e => e.UserId === id)[0];
+                                this.chatterFullName = user.UserFullname;
+                                this.chatterNickname = user.UserNickname.substring(1);
+
+                                $("#chatterInf").animate({ opacity: 1 }, 500);
+                            }
+
+                            var count = 0;
+                            for (var i = 0; i < JSON.parse(data).length; i++) {
+                                if (JSON.parse(data)[i].IsNew)
+                                    count++;
+                            }
+                            this.newmessages = count;
+
+
+                        }.bind(this)
+                    });
+
+                    setInterval(function () {
+
+                        $.ajax({
+                            url: '/Account/GetChats',
+                            type: 'GET',
+                            success: function (data) {
+
+                                var allchats = JSON.parse(data);
+                                this.allchats = allchats;
+
+                            }.bind(this)
+                        });
+
+                    }, 1000);
+                }
+
+
+            }.bind(this)
+        });
+
         if (url.indexOf("UserChat") > 0 && url.indexOf("userID") > url.indexOf("UserChat")) {
             id = url.substring(url.indexOf("userID") + 7);
             this.chatterId = id;
@@ -173,41 +229,12 @@
                     }.bind(this)
                 });
 
+
+
             }.bind(this), 500);
         }
 
-        $.ajax({
-            url: '/Account/IsAuthorized',
-            type: 'GET',
-            success: function (data) {
 
-                if (data === "True") {
-                    this.getAmountOfFriends();
-
-                    $.ajax({
-                        url: '/Account/GetChats',
-                        type: 'GET',
-                        success: function (data) {
-
-                            var allchats = JSON.parse(data);
-                            this.allchats = allchats;
-
-                            if (isChat) {
-                                var user = allchats.filter(e => e.UserId === id)[0];
-                                this.chatterFullName = user.UserFullname;
-                                this.chatterNickname = user.UserNickname.substring(1);
-
-                                $("#chatterInf").animate({ opacity: 1 }, 500);
-                            }
-
-                        }.bind(this)
-                    });
-
-                }
-
-
-            }.bind(this)
-        });
 
 
 

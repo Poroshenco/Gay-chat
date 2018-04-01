@@ -1,5 +1,5 @@
 ﻿
-
+<link href="~/css/FindUsers.css" rel="stylesheet"/>
 
 @{
     ViewData["Title"] = "FindUsers";
@@ -12,18 +12,25 @@
 @model List<ApplicationUser>
 
 @{
-    var margintop = "30px";
+    var margintop = "7%";
 
+    var containerWidth = "840px";
+    
     var downloaderwidth = "50%";
     var downloaderMargin = "250px";
 
     if (Context.Request.IsMobile())
     {
-        margintop = "10px";
+        containerWidth = "auto";
+        margintop = "11%";
         downloaderMargin = "100px";
         downloaderwidth = "80%";
     }
 }
+
+
+<link href='https://fonts.googleapis.com/css?family=Kalam' rel='stylesheet'>
+
 
 <div id="predownloader">
     <div class="progress" style="width: @downloaderwidth; margin: auto; margin-top: @downloaderMargin">
@@ -32,102 +39,106 @@
 </div>
 
 <div id="app" style="opacity: 0">
-    
+
     <div class="row" style="width: 300px; margin: auto; margin-top: @margintop;">
         <div class="input-field col s12">
             <i class="material-icons prefix" style="margin-top: 9px">search</i>
-            <input id="icon_prefix" v-model="find" type="text" style="margin-left: 32px;" class="validate">
+            <input id="icon_prefix" v-model="find" type="text" style="margin-left: 32px;">
             <label for="icon_prefix" style="margin-left: 32px">Search</label>
         </div>
     </div>
-    
-    <div v-if="sortUsers.length > 0" class="container" style="margin-top: @margintop; box-shadow: 0px 2px 7px rgba(0, 0, 0, 0.4)">
 
-        <ul class="collection">
-            @if (!Context.Request.IsMobile())
+    <div v-if="sortUsers.length > 0" class="container" style="width: @containerWidth">
+
+
+        @if (!Context.Request.IsMobile())
             {
-                //string image = user.Nickname.Substring(1).Replace(" ", string.Empty) + ".jpg";
+
+            <div class="findUsersDiv" v-for="user in sortUsers">
+
+                <div style="width: 100%; height: 55px; opacity: 0.95 ">
+
+                    <div style="float: left; width: 155px; height: 100%; text-align: right">
+                        <p style="color: #6d4c41 ; font-size: 17px; margin-top: 17px; margin-right: 2px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif">{{user.FullName}}</p>
+                    </div>
+
+
+                    <div style="float: left; width: 60px; height: 100%">
+                        <img style="width: 54px; height: 54px; margin: 3px; margin-bottom: 0px; border: 2px solid #6d4c41; border-radius: 50%" :src="'/UserImages/' + user.Nickname.substring(1) + '.jpg'" />
+                    </div>
+
+                    <div style="float: left; width: 155px; height: 100%">
+                        <p style="color: #6d4c41 ; font-size: 18px; margin-top: 18px; margin-left: 2px; font-family: 'Kalam'; text-decoration: underline ">{{user.Nickname}}</p>
+                    </div>
+
+                </div>
+
+                <p style="font-size: 17px; margin: 0px; color: #6d4c41; text-align: center; width: 100%; font-family: Georgia, 'Times New Roman', Times, serif">
+                    Дьякон
+                </p>
                 
-                <li class="collection-item avatar" v-for="user in sortUsers" style="background-color: white; height: 90px">
+                <div style="width: 100%; margin-top: 5px; padding-left: 15px; padding-right: 15px">
+                    <a href="#!" class="waves-effect waves-light btn baton" style="margin: 0px; padding: 0px; width: 110px" v-on:click="buttonOnClick(user)" >{{user.ButtonText}}</a> @*v-bind:style=" { backgroundColor: user.ButtonColor } "*@
 
-                    <img class="materialboxed circle" :src="'/UserImages/' + user.Nickname.substring(1) + '.jpg'" style="border: 2px solid #03a9f4; width: 70px; height: 70px; float: left;">
 
-                    <p style="margin-left: 20px; font-size: 14px; margin-top: 5px">
-
-                        <label style="color: black; font-size: 17px">{{user.FullName}}</label>
-                        <br>
-                        {{user.Nickname}}
-                    </p>
-
-                    <form asp-action="StartChat" asp-controller="Account" method="post">
-                        <input v-model="user.Id" type="hidden" name="userId"/>
-                        <button type="submit" class="secondary-content waves-effect waves-light btn" style="width: 50px; padding: 0px"><i class="material-icons" style="margin-left: 5px">send</i></button>
+                    <form asp-action="StartChat" asp-controller="Account" method="post" style="float: right">
+                        <input v-model="user.Id" type="hidden" name="userId" />
+                        <button type="submit" class="waves-effect waves-light btn baton" style="width: 110px;">SEND</button>
                     </form>
-                    
-                    <a href="#!" v-on:click="buttonOnClick(user)" v-bind:style=" { backgroundColor: user.ButtonColor } " class="secondary-content waves-effect waves-light btn" style="margin-right: 70px;">{{user.ButtonText}}</a>
+                </div>
 
-                </li>
-            }
-            else
-            {
-                    <li v-for="user in sortUsers" class="collection-item avatar" style="background-color: white; padding: 0px; height: 147px; border-bottom: 1px solid darkgrey">
-                        <div style="width: 100%; float: left; height: 90px">
-                            <img class="materialboxed circle" :src="'/UserImages/' + user.Nickname.substring(1) + '.jpg'"  style="border: 1px solid #03a9f4; width: 62px; height: 62px; margin-top: 15px">
+            </div>
 
-                            <div style="margin-left: 87px; margin-top: 15px">
-                                <span class="title">{{user.FullName}}</span>
-                                <p style="font-size: 12px">
-                                    {{user.Nickname}}
-                                </p>
-                            </div>
-                        </div>
 
-                        <div style="width: 100%; background-color: grey; float: left; height: 1px; margin-bottom: 7px"></div>
+        }
+        else
+        {
+            <div v-for="user in sortUsers" style=" width: 320px; padding-bottom: 12px; padding-top: 5px; margin: auto; margin-bottom: 20px; opacity: 1; background: #f5f5f5; box-shadow: 0px 3px 8px #8d6e63 ">
 
-                        <div style="float: left; height: 50px; width: 100%;">
+                <div style="width: 100%; height: 55px; opacity: 0.95 ">
 
-                            <a href="#!" class="waves-effect waves-light btn" style="width: 50px; padding: 0px; float: right; margin-right: 20px"><i class="material-icons" style="margin-left: 5px">send</i></a>
-                            <a href="#!" class="waves-effect waves-light btn bud" style="width: 120px" v-on:click="buttonOnClick(user)" v-bind:style=" { backgroundColor: user.ButtonColor } ">{{user.ButtonText}}</a>
+                    <div style="float: left; width: 130px; height: 100%; text-align: right">
+                        <p style="color: #6d4c41 ; font-size: 15px; margin-top: 16px; margin-right: 2px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif">{{user.FullName}}</p>
+                    </div>
 
-                            @*@{
-                                var status = current.GetStatusForFriendId(user.Id);
 
-                                if (status == FriendStatus.None)
-                                {
-                                    <a onclick="InviteFriend('@user.Id')" class="waves-effect waves-light btn bud" style="width: @buttonWidth">Invite</a>
-                                }
-                                else if (status == FriendStatus.Accepted)
-                                {
-                                    <a href="/Account/Contacts" class="waves-effect waves-light btn bud" style="background: #ff9800; width: @buttonWidth">Friend</a>
-                                }
-                                else if (status == FriendStatus.Invited)
-                                {
-                                    <a class="disabled waves-effect waves-light btn bud" style="background: transparent; color: black; width: @buttonWidth">Invited</a>
-                                }
-                                else
-                                {
-                                    <a onclick="Accept('@user.Id')" class="waves-effect waves-light btn bud" style="background: #00e676; width: @buttonWidth">Accept</a>
-                                }
+                    <div style="float: left; width: 60px; height: 100%">
+                        <img style="width: 50px; height: 50px; margin: 3px; margin-bottom: 0px; margin-top: 2px; border: 2px solid #6d4c41; border-radius: 50%" :src="'/UserImages/' + user.Nickname.substring(1) + '.jpg'" />
+                    </div>
 
-                            }*@
+                    <div style="float: left; width: 130px; height: 100%">
+                        <p style="color: #6d4c41 ; font-size: 16px; margin-top: 17px; margin-left: 2px; font-family: 'Kalam'; text-decoration: underline ">{{user.Nickname}}</p>
+                    </div>
 
-                        </div>
+                </div>
 
-                    </li>
-            }
+                <p style="font-size: 16px; margin: 0px; color: #6d4c41; text-align: center; width: 100%; font-family: Georgia, 'Times New Roman', Times, serif">
+                    Дьякон
+                </p>
+                
+                <div style="width: 100%; margin-top: 5px; padding-left: 15px; padding-right: 15px">
+                    <a href="#!" class="waves-effect waves-light btn baton" style="width: 110px; margin: 0px; padding: 0px; font-size: 13px">{{user.ButtonText}}</a>
 
-        </ul>
+
+                    <form asp-action="StartChat" asp-controller="Account" method="post" style="float: right">
+                        <input v-model="user.Id" type="hidden" name="userId" />
+                        <button type="submit" class="waves-effect waves-light btn baton" style="width: 110px; font-size: 13px">SEND</button>
+                    </form>
+                </div>
+
+            </div>
+        }
+
+
     </div>
-    
-    <div v-else style="margin: auto; width: 300px; height: 70px; margin-top: @margintop ; box-shadow: 0px 2px 6px rgba(0,0,0,0.25)">
-        <p style="text-align: center; font-size: 23px; padding-top: 16px">No one found</p>
+
+    <div v-else style="margin: auto; width: 300px; height: 70px; margin-top: 30px ; box-shadow: 0px 3px 7px #8d6e63; background: #f5f5f5">
+        <p style="text-align: center; font-size: 23px; padding-top: 16px; font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif; color: #a1887f  ">No one found</p>
     </div>
 
 </div>
 
 <script>
-
-
     var app = new Vue({
         el: '#app',
         data: {
@@ -138,45 +149,44 @@
 
         methods: {
 
-            updateUsers: function() {
+            updateUsers: function () {
                 $.ajax({
                     url: '/Account/UsersString',
                     type: 'GET',
                     success: function (data) {
-                        
+
                         this.users = JSON.parse(data);;
 
                     }.bind(this)
                 });
             },
 
-            buttonOnClick: function(user) {
-                
+            buttonOnClick: function (user) {
+
                 if (user.ButtonText === "Invite") {
                     user.ButtonText = "Invited";
                     user.ButtonColor = "#757575";
 
                     this.inviteFriend(user.Id);
-                    
+
                 }
 
                 if (user.ButtonText === "Subscriber") {
                     user.ButtonText = "Friend";
-                    user.ButtonColor = "#ff9800";
 
                     this.acceptInvite(user.Id);
                 }
 
             },
 
-            acceptInvite: function(id) {
+            acceptInvite: function (id) {
                 $.ajax({
                     url: '/Account/AcceptInvite',
                     type: 'POST',
                     data: {
-                        subscriberId: id  
+                        subscriberId: id
                     },
-                });              
+                });
             },
 
             inviteFriend: function (id) {
@@ -184,9 +194,9 @@
                     url: '/Account/Invite',
                     type: 'POST',
                     data: {
-                      friendId: id  
+                        friendId: id
                     },
-                });                
+                });
             }
         },
 
@@ -216,7 +226,7 @@
                 }.bind(this),
             });
 
-            setInterval(function() {
+            setInterval(function () {
 
                 this.updateUsers();
 
@@ -224,12 +234,5 @@
 
         }
     })
-    
-</script>
 
-<style>
-    .bud {
-        float: left;
-        margin-left: 20px;
-    }
-</style>
+</script>
