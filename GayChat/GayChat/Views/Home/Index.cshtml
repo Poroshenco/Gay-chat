@@ -6,101 +6,6 @@
 @inject SignInManager<ApplicationUser> SignInManager
 
 
-@*@if (Context.Request.IsMobile())
-    {
-        <div id="mainIndex" style="position: relative; width: 100%">
-
-            <img src="~/images/@(indexImage + ".jpg")" style="position: absolute; top: 0px; left: 0px; width: 100%; height: 100%; filter: blur(2px)" />
-
-            <div style=" text-align: center; width: 320px; height: 50px; position: absolute; left: 50%; margin-left: -160px; margin-top: @marginTop">
-
-                <h3 style="color: white; font-size: 31px; border-top: 1px solid white; border-bottom: 1px solid white; letter-spacing: 4px; width: 210px; margin: auto; padding: 2px">
-                    GAY CHAT
-                </h3>
-
-
-
-                @if (SignInManager.IsSignedIn(User))
-                {
-                    <h5 style="color: white; margin-bottom: 10px; margin-top: 8px; font-family: bold italic">Start chatting with other GAYS</h5>
-
-                    <div style="width: 240px; height: 100px; margin: auto;">
-
-                        <a class="waves-effect waves-light btn" href="/Account/FindUsers" style="width: 150px; background-color: transparent; border: 1px solid white; padding: 0px;">New Friends</a>
-
-                        <a class="waves-effect waves-light btn" href="/Account/Contacts" style="width: 125px; background-color: transparent; border: 1px solid white; padding: 0px; margin-top: 8px">Contacts</a>
-
-                    </div>
-                }
-                else
-                {
-                    <h5 style="color: white; margin-bottom: 10px; margin-top: 8px; font-family: bold italic">A new way of GAY chating</h5>
-
-                    <div style="width: 230px; height: 60px; margin: auto;">
-
-                        <a class="waves-effect waves-light btn" href="/Account/Login" style="float: left; width: 105px; background-color: transparent; padding: 0px; border: 1px solid white">Sign in </a>
-
-                        <a class="waves-effect waves-light btn" href="/Account/Register" style="float: right; width: 105px; background-color: transparent; padding: 0px; border: 1px solid white">Sign up</a>
-
-                    </div>
-                }
-
-
-            </div>
-
-        </div>
-
-    }
-
-        else
-    {
-            <div class="paralich" style="background: url('/images/PC_Index_4.jpg'); height: 330px; width: 100%; background-attachment: fixed; background-position: center; background-repeat: no-repeat; background-size: cover;"></div>
-
-        <div id="maincontainer_1" style="height: 170px; width: 100%; background: #6d4c41 ; opacity: 0.7; padding-top: 23px; border-top: 1px solid #d7ccc8  ; border-bottom: 1px solid #d7ccc8   ">
-
-            <div class="maininfo" id="maindiv_1">
-                <p style="font-size: 35px; font-family: Cambria, Cochin, Georgia, Times, Times New Roman, serif; letter-spacing: 3px; margin: 0px; margin-left: 7px; height: 43px; color: #e0e0e0;">Telehram</p>
-
-                <p style="color: #e0e0e0; font-family: Brush Script MT, Brush Script Std, cursive; margin: 0px; font-size: 23px; margin-left: 7px; height: 42px ">A new way of sacred chating</p>
-            </div>
-
-            <div class="maininfo_button" id="maindiv_2">
-                <button class="btn waves-effect baton-inversed" style="font-size: 17px;">Pray</button>
-            </div>
-
-        </div>
-
-        <div class="paralich" style="background: url('/images/PC_Index_4.jpg'); height: 300px; width: 100%; background-attachment: fixed; background-position: center; background-repeat: no-repeat; background-size: cover;"></div>
-
-
-
-
-        <div class="paralich" style="background: url('/images/PC_Index.jpg'); height: 320px; width: 100%; background-attachment: fixed; background-position: center; background-repeat: no-repeat; background-size: cover;"></div>
-
-        <div style="height: 140px; width: 100%; background: #6d4c41 ; border-top: 1px solid #d7ccc8  ; border-bottom: 1px solid #d7ccc8   ">
-
-            <div style="width: 500px; height: 86px; margin: auto; margin-top: 25px;">
-
-                <div style="width: 50%; height: 100%; border-right: 1px solid #e0e0e0; text-align: right; float: left">
-                    <p style="font-size: 31px; font-family: 'Segoe UI Emoji'; color: #e0e0e0; margin: 0px; margin-right: 59px ">Sign Up</p>
-
-                    <a href="/Account/Register" class="btn waves-effect baton-inversed" style="margin-top: 3px; font-size: 15px; margin-right: 50px">Sign up</a>
-                </div>
-
-                <div style="width: 50%; height: 100%; border-left: 1px solid #e0e0e0; float: left">
-
-                    <p style="font-size: 31px; color: #e0e0e0; margin: 0px; font-family: 'Segoe UI Emoji'; margin-left: 67px" >Login</p>
-
-                    <a href="/Account/Login" class="btn waves-effect baton-inversed" style="margin-top: 3px; font-size: 15px; margin-left: 50px">Login</a>
-                </div>
-
-            </div>
-
-        </div>
-
-        <div class="paralich" style="background: url('/images/PC_Index.jpg'); height: 320px; width: 100%; background-attachment: fixed; background-position: center; background-repeat: no-repeat; background-size: cover;"></div>
-
-    }*@
 
 
 <div class="parallax-window imageSize" id="first" data-parallax="scroll" data-image-src="/images/PC_Index_4.jpg">
@@ -113,7 +18,7 @@
                 <h3>A new way of sacred chating</h3>
             </div>
 
-            <button class="btn waves-effect baton-inversed">PRAY</button>
+            <a class="btn waves-effect baton-inversed praylink">PRAY</a>
 
         </div>
     </div>

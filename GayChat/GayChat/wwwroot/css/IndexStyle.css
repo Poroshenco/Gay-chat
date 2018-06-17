@@ -1,4 +1,8 @@
-﻿.parallax-window {
+﻿.praylink{
+    float: right;
+}
+
+.parallax-window {
     background: transparent;
     z-index: 50;
 }

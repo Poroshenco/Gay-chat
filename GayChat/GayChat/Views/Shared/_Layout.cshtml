@@ -35,7 +35,7 @@
     </environment>
     @Html.Raw(JavaScriptSnippet.FullScript)
 </head>
-<body style="background-color: #f1f1f1">
+<body>
 
     @{
         string nickname = "", image = "", fname = "", surname = "";
@@ -63,8 +63,8 @@
     }
 
     <div id="main">
-        <div class="navbar-fixed" style="position: fixed; top: 0px;">
-            <nav style="opacity: 0.8; border-bottom: 1px solid #e0e0e0">
+        <div class="navbar-fixed" style="position: fixed; top: 0px; ">
+            <nav style="opacity: 0.8; border-bottom: 1px solid #e0e0e0;     ">
                 <div class="nav-wrapper">
                     <a data-activates="slide-out" class="button-collapse menu-left" style="display: block; cursor: pointer"><i class="material-icons">menu</i></a>
 
@@ -74,7 +74,7 @@
                         <a data-activates="slide-chats" class="button-collapse menu-right right" style="display: block; cursor: pointer"><i class="material-icons">send</i></a>
                     }
 
-                    <a href="/Home/Index" class="brand-logo center" style="letter-spacing: 2px">Telehram</a>
+                    <a href="/Home/Index" id="siteName" class="brand-logo center" style="letter-spacing: 2px">Telehram</a>
 
 
                     @if (SignInManager.IsSignedIn(User))
@@ -115,7 +115,7 @@
             @if (SignInManager.IsSignedIn(User))
             {
                 <li>
-                    <div class="user-view" style="padding: 12px">
+                    <div class="user-view" style="padding: 4px 12px">
 
                         <div class="background">
                             <img src="/images/slide-nav-background.jpg" style="width: 100%; height: 100%">
@@ -223,7 +223,7 @@
                 $('ul.tabs').tabs();
 
                 $('.menu-left').sideNav({
-                    menuWidth: 300, // Default is 300
+                    menuWidth: 280, // Default is 300
                     edge: 'left', // Choose the horizontal origin
                     closeOnClick: true, // Closes side-nav on <a> clicks, useful for Angular/Meteor
                     draggable: true, // Choose whether you can drag to open on touch screens,

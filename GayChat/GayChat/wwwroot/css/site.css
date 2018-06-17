@@ -1,4 +1,8 @@
-﻿.maininfo {
+﻿body {
+    background: #f1f1f1;
+}
+
+.maininfo {
     width: 330px;
     margin-left: 50%;
     text-align: left;
@@ -13,6 +17,17 @@
     margin-top: 5px;
     opacity: 0;
 }
+
+.baton-inversed {
+    transition: 0.35s ease-in-out;
+    color: #6d4c41;
+    background: #e0e0e0;
+}
+
+    .baton-inversed:hover {
+        background: #6d4c41;
+        color: #e0e0e0;
+    }
 
 .baton {
     transition: 0.35s ease-in-out;
