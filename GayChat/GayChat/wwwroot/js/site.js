@@ -166,9 +166,9 @@
 
                         }.bind(this)
                     });
-
+                    
                     setInterval(function () {
-
+                        
                         $.ajax({
                             url: '/Account/GetChats',
                             type: 'GET',
@@ -181,6 +181,7 @@
                         });
 
                     }, 1000);
+                    
                 }
 
 

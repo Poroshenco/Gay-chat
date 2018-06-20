@@ -8,11 +8,26 @@
 }
 
 #first {
-    padding-top: 320px;
+    padding-top: 340px;
 }
 
 .imageSize {
     height: 800px;
+    height: 900px;
+}
+
+@media only screen and (min-width: 720px) and (max-width: 1080px) {
+    .imageSize {
+        height: 750px;
+    }
+
+    #first {
+        padding-top: 310px;
+    }
+
+    #second {
+        padding-top: 330px;
+    }
 }
 
 .indexTopic {
@@ -80,7 +95,7 @@
 
 
 #second {
-    padding-top: 330px;
+    padding-top: 370px;
 }
 
     #second > div {

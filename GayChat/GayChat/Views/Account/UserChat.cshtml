@@ -4,45 +4,64 @@
     ViewData["Title"] = "UserChat";
 }
 
+<link href="~/css/UserChat.css" rel="stylesheet" />
+
 @if (!Context.Request.IsMobile())
 {
-    <div style="width: 500px; height: 600px; margin: auto; position: relative; margin-top: 30px; background-color: white; box-shadow: 0px 3px 7px rgba(0,0,0,0.5); overflow: hidden">
+    <div class="conteiner">
 
-        <div style="height: 62px; width: 100%;  background-color: #40c4ff ">
-            <div id="chatterInf" style="opacity: 0;">
-                <img id="chatterImage" :src="'/UserImages/' + chatterNickname + '.jpg'" style="width: 50px; height: 50px; margin: 6px; margin-left: 21px; border-radius: 50%; float: left; border: 1px solid white" />
+        <div class="username">
+            <div id="chatterInf">
 
-                <p style="float: left; margin-left: 2px; font-size: 17px; margin-top: 18px; color: white">{{chatterFullName}}</p>
+                <img id="chatterImage" :src="'/UserImages/' + chatterNickname + '.jpg'" />
+
+                <p>{{chatterFullName}}</p>
+
             </div>
         </div>
 
-        <div id="messages" style="padding-top: 10px; padding-bottom: 10px; overflow-y: auto; height: 478px; width: 521px; border-bottom: 1px solid #f1f1f1; border-top: 1px solid #f1f1f1">
-            <div v-for="message in messages" style="width: 100%;">
 
-                <p v-if="message.FromMe" style="float: right; margin: 9px; width: 80%; text-align: right; margin-right: 15px; font-size: 17px; color: white">
-                    <span style="margin-right: 20px; background: #2F9E41 ; min-width: 50px; border-radius: 5px; padding-right: 13px; padding-top: 8px; padding-bottom: 8px; padding-left: 10px; ">
-                        <small style="font-size: 13px; color: #e0e0e0;  padding-right: 3px;">{{message.ShortSendTime}}</small> {{message.MessageInner}}</span>
-                </p>
-                
-                
-                <p v-else style="float: left; margin: 9px; width: 80%; text-align: left; margin-left: 15px; font-size: 17px; color: white">
-                    <span style="margin-right: 20px; background: #ff8f00 ; min-width: 50px; border-radius: 5px; padding-right: 13px; padding-top: 8px; padding-bottom: 8px; padding-left: 10px; ">
-                        <small style="font-size: 13px; color: #e0e0e0;  padding-right: 3px;">{{message.ShortSendTime}}</small> {{message.MessageInner}}
-                    </span>
-                </p>
+
+
+        <div id="messages">
+            <div v-for="message in messages">
+
+
+                <div class="message fromMe" v-if="message.FromMe">
+                    <p>
+                        {{message.MessageInner}}
+                    </p>
+
+                    <div class="time">
+                        {{message.ShortSendTime}}
+                    </div>
+                </div>
+
+
+                <div class="message notFromMe" v-else>
+                    <p>
+                        {{message.MessageInner}}
+                    </p>
+
+                    <div class="time">
+                        {{message.ShortSendTime}}
+                    </div>
+                </div>
 
             </div>
-            
-
         </div>
 
-        <div style="position: absolute; bottom: 0px; left: 0px; margin: 0px; width: 100%; height: 55px; background-color: #40c4ff">
-            
-            <input v-on:keyup.enter="sendMessage()" v-model="draft" placeholder="Write your message" style="background-color: white; padding: 0px; margin: 0px; height: 35px; width: 330px; margin-top: 9px; margin-left: 24px; border-radius: 3px; padding-left: 7px; float: left; height: 36px" onsubmit=""/>
-            <button v-on:click="sendMessage()" class="btn waves-effect" style="float: right; border-radius: 7px; border: 2px solid white; color: white; background-color: transparent; font-size: 17px; width: 108px; padding:0px; margin-top: 9px; margin-right: 24px; height: 36px">Send</button>
+
+
+
+        <div id="sendmessagediv">
+            <input v-on:keyup.enter="sendMessage()" v-model="draft" placeholder="Write your message" onsubmit="" />
+
+            <button v-on:click="sendMessage()" class="btn waves-effect">Send</button>
         </div>
 
     </div>
+    
 
 }
 else
@@ -62,10 +81,10 @@ else
         <div v-for="message in messages">
 
             @*<p v-if="message.FromMe" style="float: right; margin: 9px; width: 80%; text-align: right; margin-right: 1px; font-size: 17px; color: white;">
-                <span style="margin-right: 20px; background: #2F9E41 ; min-width: 50px; border-radius: 5px; padding-right: 13px; padding-top: 8px; padding-bottom: 8px; padding-left: 10px; ">
-                    <small style="font-size: 13px; color: #e0e0e0;  padding-right: 3px;">{{message.ShortSendTime}}</small> {{message.MessageInner}}
-                </span>
-            </p>*@
+                    <span style="margin-right: 20px; background: #2F9E41 ; min-width: 50px; border-radius: 5px; padding-right: 13px; padding-top: 8px; padding-bottom: 8px; padding-left: 10px; ">
+                        <small style="font-size: 13px; color: #e0e0e0;  padding-right: 3px;">{{message.ShortSendTime}}</small> {{message.MessageInner}}
+                    </span>
+                </p>*@
 
 
             <p v-if="!message.FromMe" style="float: left; margin: 9px; width: 80%; text-align: justify; margin-left: 15px; font-size: 17px; color: white">
@@ -88,3 +107,11 @@ else
 
     </div>
 }
+
+@*<script>
+        $(document).ready(function () {
+
+            $("#siteName").text("Chat");
+
+        });
+    </script>*@
